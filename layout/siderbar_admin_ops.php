@@ -53,6 +53,12 @@
       <i class="fas fa-fw fa-chart-area"></i>
       <span>Data Dokumen PIB</span></a>
   </li>
+  <!-- Nav Item - Tables -->
+  <li class="nav-item">
+    <a class="nav-link" href="daftar_do.php">
+      <i class="fas fa-fw fa-chart-area"></i>
+      <span>Data Delivery Order</span></a>
+  </li>
 
   <!-- Divider -->
   <hr class="sidebar-divider d-none d-md-block">

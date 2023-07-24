@@ -63,6 +63,7 @@ $koneksi = koneksi();
                       <th>Faktur</th>
                       <th>Tanggal Order</th>
                       <th>Status</th>
+                      <th>Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -74,7 +75,7 @@ $koneksi = koneksi();
                     ?>
                       <tr>
                         <td><?= $no++; ?></td>
-                        <td>JOB-<?= $data['tgl_order'] . '-' . $data['id_joborder']; ?></td>
+                        <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
                         <td><?= $data['no_bl']; ?></td>
                         <td><?= $data['no_packing_list']; ?></td>
                         <td><?= $data['no_faktur']; ?></td>
@@ -83,6 +84,14 @@ $koneksi = koneksi();
                           <?php
                           if ($data['validasi'] == 'Pengajuan') {
                             $color = '#F1C93B';
+                          } elseif ($data['validasi'] == 'Ditolak') {
+                            $color = '#FF6666';
+                          } elseif ($data['validasi'] == 'Selesai') {
+                            $color = '#1D5D9B';
+                          } elseif ($data['validasi'] == 'Paid') {
+                            $color = '#A076F9';
+                          } elseif ($data['validasi'] == 'Proses kirim') {
+                            $color = '#F2BED1';
                           } else {
                             $color = '#35A29F';
                           }
@@ -92,6 +101,14 @@ $koneksi = koneksi();
                               <?= $data['validasi']; ?>
                             </span>
                           </div>
+                        </td>
+                        <td>
+                          <a href="selesai_joborder.php?id=<?= $data['id_joborder']; ?>" class="btn btn-info btn-icon-split btn-sm">
+                            <span class="icon text-white-50">
+                              <i class="fas fa-info-circle"></i>
+                            </span>
+                            <span class="text">Diterima</span>
+                          </a>
                         </td>
                       <?php } ?>
                       </tr>

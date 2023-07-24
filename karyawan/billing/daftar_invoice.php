@@ -2,6 +2,11 @@
 session_start();
 require '../../koneksi.php';
 $koneksi = koneksi();
+if (!isset($_SESSION['login_karyawan'])) {
+  header('location:../../login.php');
+} else if ($_SESSION['level'] !== 'billing') {
+  header('location:../../login.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,7 +50,8 @@ $koneksi = koneksi();
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Data Job Order</h1>
+            <h1 class="h3 mb-0 text-gray-800">Data Invoice</h1>
+            <a href="tambah_invoice.php" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Tambah Data</a>
           </div>
 
           <!-- Data Table -->
@@ -66,14 +72,14 @@ $koneksi = koneksi();
                   </thead>
                   <tbody>
                     <?php
-                    $sql = $koneksi->query("SELECT * FROM invoice INNER JOIN job_order ON job_order.id_joborder=invoice.id_joborder") or die(mysqli_error($koneksi));
+                    $sql = $koneksi->query("SELECT * FROM invoice INNER JOIN job_order ON job_order.id_joborder=invoice.id_joborder WHERE  validasi='Proses' OR validasi='Selesai' OR validasi='Paid'") or die(mysqli_error($koneksi));
                     // var_dump($data = $sql->fetch_assoc());
                     $no = 1;
                     while ($data = $sql->fetch_assoc()) {
                     ?>
                       <tr>
                         <td><?= $no++; ?></td>
-                        <td>JOB-<?= $data['tgl_order'] . '-' . $data['id_joborder']; ?></td>
+                        <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
                         <td>Rp. <?= number_format($data['biaya_total']); ?> ,-</td>
                         <td>
                           <?php
@@ -97,6 +103,12 @@ $koneksi = koneksi();
                           <?php
                           if ($data['validasi'] == 'Pengajuan') {
                             $color = '#F1C93B';
+                          } elseif ($data['validasi'] == 'Ditolak') {
+                            $color = '#FF6666';
+                          } elseif ($data['validasi'] == 'Selesai') {
+                            $color = '#1D5D9B';
+                          } elseif ($data['validasi'] == 'Paid') {
+                            $color = '#A076F9';
                           } else {
                             $color = '#35A29F';
                           }
@@ -108,18 +120,23 @@ $koneksi = koneksi();
                           </div>
                         </td>
                         <td>
-                          <a href="upload_buktibayar.php?id=<?= $data['id_tagihan']; ?>" class="btn btn-info btn-icon-split btn-sm">
-                            <span class="icon text-white-50">
-                              <i class="fas fa-info-circle"></i>
-                            </span>
-                            <span class="text">Edit</span>
-                          </a>
-                          <a href="upload_buktibayar.php?id=<?= $data['id_tagihan']; ?>" class="btn btn-danger btn-icon-split btn-sm">
-                            <span class="icon text-white-50">
-                              <i class="fas fa-info-circle"></i>
-                            </span>
-                            <span class="text">Edit</span>
-                          </a>
+                          <?php
+                          if ($data['validasi'] == 'Proses') { ?>
+                            <a href="approve_invoice.php?id=<?= $data['id_tagihan']; ?>" class="btn btn-info btn-icon-split btn-sm">
+                              <span class="icon text-white-50">
+                                <i class="fas fa-info-circle"></i>
+                              </span>
+                              <span class="text">Aprove</span>
+                            </a>
+                          <?php
+                          } else { ?>
+                            <a href="approve_invoice.php?id=<?= $data['id_tagihan']; ?>" class="btn btn-info btn-icon-split btn-sm">
+                              <span class="icon text-white-50">
+                                <i class="fas fa-info-circle"></i>
+                              </span>
+                              <span class="text">Lihat Detail</span>
+                            </a>
+                          <?php } ?>
                         </td>
                       <?php } ?>
                       </tr>
@@ -180,16 +197,16 @@ $koneksi = koneksi();
         dom: 'Bfrtip',
         buttons: [{
             extend: 'excelHtml5',
-            title: 'Data Job Order',
+            title: 'Data Invoice',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6]
+              columns: [0, 1, 2, 3, 4, 5]
             }
           },
           {
             extend: 'pdfHtml5',
-            title: 'Data Job Order',
+            title: 'Data Invoice',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6]
+              columns: [0, 1, 2, 3, 4, 5]
             }
           }
         ]

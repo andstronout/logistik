@@ -2,6 +2,11 @@
 session_start();
 require '../../koneksi.php';
 $koneksi = koneksi();
+if (!isset($_SESSION['login_karyawan'])) {
+  header('location:../../login.php');
+} else if ($_SESSION['level'] !== 'admin_ops') {
+  header('location:../404.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,7 +50,7 @@ $koneksi = koneksi();
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Data PIB</h1>
+            <h1 class="h3 mb-0 text-gray-800">Pemberitahuan Import Barang</h1>
             <a href="tambah_pib.php" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Tambah Data</a>
           </div>
 
@@ -61,7 +66,6 @@ $koneksi = koneksi();
                       <th>Nomor Job order</th>
                       <th>Nomor Pengajuan</th>
                       <th>Nama Pelanggan</th>
-                      <th>Penanggung Jawab</th>
                       <th>Tanggal PIB</th>
                       <th>Biaya PIB</th>
                       <th>Aksi</th>
@@ -69,26 +73,31 @@ $koneksi = koneksi();
                   </thead>
                   <tbody>
                     <?php
-                    $sql = $koneksi->query("SELECT * FROM pib INNER JOIN job_order ON pib.id_joborder=job_order.id_joborder INNER JOIN pelanggan ON pelanggan.id_pelanggan=pib.id_pelanggan INNER JOIN karyawan ON karyawan.id_karyawan=pib.id_karyawan");
+                    $sql = $koneksi->query("SELECT * FROM pib INNER JOIN job_order ON pib.id_joborder=job_order.id_joborder INNER JOIN pelanggan ON pelanggan.id_pelanggan=pib.id_pelanggan");
                     $no = 1;
                     while ($data = $sql->fetch_assoc()) {
                     ?>
                       <tr>
                         <td><?= $no++; ?></td>
-                        <td>PIB-<?= $data['tgl_order'] . '-' . $data['no_pib']; ?></td>
-                        <td>JOB-<?= $data['tgl_order'] . '-' . $data['id_joborder']; ?></td>
+                        <td><?= $data['no_pib']; ?></td>
+                        <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
                         <td><?= $data['no_pengajuan']; ?></td>
                         <td><?= $data['nama_pelanggan']; ?></td>
-                        <td><?= $data['nama_karyawan']; ?></td>
                         <td><?= $data['tgl_pib']; ?></td>
                         <td><?= 'Rp.' . number_format($data['biaya_pib']); ?></td>
 
                         <td>
-                          <a href="aprove_joborder.php?id=<?= $data['id_joborder']; ?>" class="btn btn-info btn-icon-split btn-sm">
+                          <a href="edit_pib.php?id=<?= $data['no_pib']; ?>" class="btn btn-info btn-icon-split btn-sm mb-2">
                             <span class="icon text-white-50">
                               <i class="fas fa-info-circle"></i>
                             </span>
-                            <span class="text">Aprove</span>
+                            <span class="text">Ubah</span>
+                          </a>
+                          <a href="hapus_pib.php?id=<?= $data['no_pib']; ?>" class="btn btn-danger btn-icon-split btn-sm" onclick="return confirm('Are you sure you want to delete?')">
+                            <span class="icon text-white-50">
+                              <i class="fas fa-trash"></i>
+                            </span>
+                            <span class="text">Hapus</span>
                           </a>
                         </td>
                       <?php } ?>
@@ -149,14 +158,14 @@ $koneksi = koneksi();
         dom: 'Bfrtip',
         buttons: [{
             extend: 'excelHtml5',
-            title: 'Data Job Order',
+            title: 'Data PIB',
             exportOptions: {
               columns: [0, 1, 2, 3, 4, 5, 6]
             }
           },
           {
             extend: 'pdfHtml5',
-            title: 'Data Job Order',
+            title: 'Data PIB',
             exportOptions: {
               columns: [0, 1, 2, 3, 4, 5, 6]
             }

@@ -4,7 +4,7 @@ require '../../koneksi.php';
 $koneksi = koneksi();
 if (!isset($_SESSION['login_karyawan'])) {
   header('location:../../login.php');
-} else if ($_SESSION['level'] !== 'admin_ops') {
+} else if ($_SESSION['level'] !== 'billing') {
   header('location:../../login.php');
 }
 ?>
@@ -39,7 +39,7 @@ if (!isset($_SESSION['login_karyawan'])) {
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <?php include('../../layout/siderbar_admin_ops.php'); ?>
+    <?php include('../../layout/siderbar_billing.php'); ?>
 
 
     <!-- Content Wrapper -->
@@ -52,7 +52,7 @@ if (!isset($_SESSION['login_karyawan'])) {
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h4 mb-4 text-gray-800">Tambah Data PIB</h1>
+          <h1 class="h4 mb-4 text-gray-800">Tambah Invoice Baru</h1>
           <div class="card shadow mb-4">
             <div class="card-body">
               <form method="post">
@@ -69,11 +69,20 @@ if (!isset($_SESSION['login_karyawan'])) {
                   $ambil = $_POST['id_job'];
                   $cek = explode('-', $ambil);
                   $cekid = $cek[1];
-                  $sq = $koneksi->query("SELECT * FROM job_order INNER JOIN pelanggan ON pelanggan.id_pelanggan=job_order.id_pelanggan WHERE id_joborder='$cekid'");
+                  $sq = $koneksi->query("SELECT * FROM job_order INNER JOIN pelanggan ON pelanggan.id_pelanggan=job_order.id_pelanggan INNER JOIN pib ON pib.id_joborder=job_order.id_joborder INNER JOIN sppb ON pib.no_pib=sppb.no_pib WHERE job_order.id_joborder='$cekid'") or die(mysqli_error($koneksi));
                   $sql = $sq->fetch_assoc();
+
+                  $total = $sql['biaya_joborder'] + $sql['biaya_pib'] + $sql['biaya_sppb'];
+                  // var_dump($sql);
                   // ini data dapet dari cek
                   $_SESSION['id_job'] = $sql['id_joborder'];
                   $_SESSION['id_pel'] = $sql['id_pelanggan'];
+                  $_SESSION['biaya_joborder'] = $sql['biaya_joborder'];
+                  $_SESSION['no_pib'] = $sql['no_pib'];
+                  $_SESSION['biaya_pib'] = $sql['biaya_pib'];
+                  $_SESSION['no_sppb'] = $sql['no_sppb'];
+                  $_SESSION['biaya_sppb'] = $sql['biaya_sppb'];
+                  $_SESSION['total'] = $sql['biaya_joborder'] + $sql['biaya_pib'] + $sql['biaya_sppb'];;
                   if ($sql != null) { ?>
                     <!-- End Cek Job Order -->
 
@@ -88,23 +97,37 @@ if (!isset($_SESSION['login_karyawan'])) {
                       </div>
                       <div class="mb-3 ">
                         <label for="exampleInputnopib1" class="form-label">Nomor PIB</label>
-                        <input type="text" class="form-control" id="exampleInputnopib1" aria-describedby="nopibHelp" name="no_pib" placeholder="Masukan nomor pib" required>
-                      </div>
-                      <div class="mb-3 ">
-                        <label for="exampleInputpengajuan1" class="form-label">Nomor Pengajuan</label>
-                        <input type="text" class="form-control" id="exampleInputpengajuan1" aria-describedby="pengajuanHelp" name="no_pengajuan" placeholder="Masukan nomor pengajuan">
+                        <input type="text" class="form-control" id="exampleInputnopib1" aria-describedby="nopibHelp" name="no_pib" value="<?= $sql['no_pib']; ?>" readonly>
                       </div>
                       <div class="mb-3">
                         <label for="exampleInputbiaya1" class="form-label">Biaya PIB</label>
-                        <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya" placeholder="Masukan Biaya">
+                        <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya_pib" value="<?= 'Rp. ' . number_format($sql['biaya_pib']); ?>" readonly>
                       </div>
-                      <button type="submit" class="btn btn-success col-2 " name="simpan">Simpan</button>
+                      <div class="mb-3 ">
+                        <label for="exampleInputnopib1" class="form-label">Nomor SPPB</label>
+                        <input type="text" class="form-control" id="exampleInputnopib1" aria-describedby="nopibHelp" name="no_pib" value="<?= $sql['no_sppb']; ?>" readonly>
+                      </div>
+                      <div class="mb-3">
+                        <label for="exampleInputbiaya1" class="form-label">Biaya SPPB</label>
+                        <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya_sppb" value="<?= 'Rp. ' . number_format($sql['biaya_sppb']); ?>" readonly>
+                      </div>
+                      <div class="mb-3">
+                        <label for="exampleInputbiaya1" class="form-label">Biaya Job Order</label>
+                        <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya_joborder" value="<?= 'Rp. ' . number_format($sql['biaya_joborder']); ?>" readonly>
+                      </div>
+                      <hr>
+                      <div class="mb-3">
+                        <label for="exampleInputbiaya1" class="form-label">Total Biaya</label>
+                        <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya_total" value="<?= 'Rp.  ' . number_format($total) . ',-'; ?>" readonly>
+                      </div>
+                      <h6 class="mb-3">Apakah data sudah benar?</h6>
+                      <button type="submit" class="btn btn-success col-2 " name="simpan">Buat Invoice</button>
                     </div>
                 <?php } else {
                     echo '
                     <script>
-                    alert("Job Order tidak boleh kosong!");
-                    window.location.href= "tambah_pib.php";
+                    alert("Job Order tidak boleh sama!");
+                    window.location.href= "tambah_invoice.php";
                     </script>                    
                     ';
                   }
@@ -123,14 +146,8 @@ if (!isset($_SESSION['login_karyawan'])) {
 
       <?php
       if (isset($_POST['simpan'])) {
-        $idjob = $_POST['id_joborder'];
-        $idpel = $_POST['id_pelanggan'];
-        $ck = explode('-', $idpel);
-        $idpelanggan = $ck[1];
-        // var_dump($idjob, $idpelanggan);
-        $tanggalpib = date('Y-m-d');
 
-        $cari = $koneksi->query("SELECT id_joborder FROM pib WHERE id_joborder='$_SESSION[id_job]'");
+        $cari = $koneksi->query("SELECT id_joborder FROM invoice WHERE id_joborder='$_SESSION[id_job]'");
         $dapet = $cari->fetch_assoc();
 
         if ($dapet != null) {
@@ -141,14 +158,23 @@ if (!isset($_SESSION['login_karyawan'])) {
           </script>                    
           ';
         } else {
-          $insert = $koneksi->query("INSERT INTO pib (no_pib,id_joborder,no_pengajuan,id_pelanggan,tgl_pib,biaya_pib) VALUES ('$_POST[no_pib]','$_SESSION[id_job]','$_POST[no_pengajuan]','$_SESSION[id_pel]','$tanggalpib','$_POST[biaya]')") or die(mysqli_error($koneksi));
+          $insert = $koneksi->query("INSERT INTO invoice (id_pelanggan,id_joborder,biaya_pib,biaya_sppb, biaya_joborder, biaya_total, no_pib, no_sppb) VALUES ('$_SESSION[id_pel]','$_SESSION[id_job]','$_SESSION[biaya_pib]','$_SESSION[biaya_sppb]','$_SESSION[biaya_joborder]','$_SESSION[total]','$_SESSION[no_pib]','$_SESSION[no_sppb]')") or die(mysqli_error($koneksi));
           echo "
             <script>
             alert('Data Berhasil Ditambah');
-            document.location.href = 'daftar_pib.php';
+            document.location.href = 'daftar_invoice.php';
             </script>
             ";
-          session_unset($_SESSION['id_job'], $_SESSION['id_pel']);
+          session_unset(
+            $_SESSION['id_job'],
+            $_SESSION['id_pel'],
+            $_SESSION['biaya_joborder'],
+            $_SESSION['no_pib'],
+            $_SESSION['biaya_pib'],
+            $_SESSION['no_sppb'],
+            $_SESSION['biaya_sppb'],
+            $_SESSION['total']
+          );
         }
       }
       ?>

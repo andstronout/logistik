@@ -40,18 +40,18 @@
     Tools
   </div>
 
-  <!-- Nav Item - Charts -->
-  <li class="nav-item">
-    <a class="nav-link" href="daftar_karyawan.php">
-      <i class="fas fa-fw fa-table"></i>
-      <span>Data Karyawan</span></a>
-  </li>
-
   <!-- Nav Item - Tables -->
   <li class="nav-item">
-    <a class="nav-link" href="daftar_pelanggan.php">
+    <a class="nav-link" href="daftar_joborder.php">
       <i class="fas fa-fw fa-chart-area"></i>
-      <span>Data Pelanggan</span></a>
+      <span>Data Job order</span></a>
+  </li>
+
+  <!-- Nav Item - Charts -->
+  <li class="nav-item">
+    <a class="nav-link" href="daftar_do.php">
+      <i class="fas fa-fw fa-table"></i>
+      <span>Data Delivery Order</span></a>
   </li>
 
   <!-- Divider -->

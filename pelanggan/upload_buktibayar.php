@@ -5,7 +5,7 @@ $id = $_GET['id'];
 $koneksi = koneksi();
 $id_pelanggan = $_SESSION['id_pelanggan'];
 $tanggal = date('y-m-d');
-$sql = $koneksi->query("SELECT * FROM invoice INNER JOIN job_order ON invoice.id_joborder=job_order.id_joborder WHERE invoice.id_pelanggan=$id_pelanggan");
+$sql = $koneksi->query("SELECT * FROM invoice INNER JOIN job_order ON invoice.id_joborder=job_order.id_joborder WHERE invoice.id_tagihan='$id'");
 $hasil = $sql->fetch_assoc();
 // var_dump($hasil);
 ?>
@@ -56,7 +56,7 @@ $hasil = $sql->fetch_assoc();
               <form method="post">
                 <div class="mb-3">
                   <label for="exampleInputno_bl1" class="form-label">ID Job Order</label>
-                  <input type="text" class="form-control" id="exampleInputno_bl1" aria-describedby="no_blHelp" value="<?php echo 'JOB-' . $hasil['tgl_order'] . '-' . $hasil['id_joborder']; ?>" readonly>
+                  <input type="text" class="form-control" id="exampleInputno_bl1" aria-describedby="no_blHelp" value="<?php echo 'SLI-' . str_pad($hasil['id_joborder'], 4, "0", STR_PAD_LEFT); ?>" readonly>
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputpacking_list1" class="form-label">Total Biaya</label>
@@ -64,15 +64,20 @@ $hasil = $sql->fetch_assoc();
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputno_bukti1" class="form-label">Nomor Transaksi</label>
-                  <input type="text" class="form-control" id="exampleInputno_bukti1" aria-describedby="no_buktiHelp" name="bukti_bayar" placeholder="Masukan Nomor Bukti Transaksi Pembayaran" required>
+                  <input type="text" class="form-control" id="exampleInputno_bukti1" aria-describedby="no_buktiHelp" name="bukti_bayar" <?php if ($hasil['bukti_bayar'] == null) { ?> placeholder="Masukan Nomor Bukti Transaksi Pembayaran" required <?php } else { ?> value="<?= $hasil['bukti_bayar']; ?>" readonly> <?php } ?>
                 </div>
                 <div class="mb-3">
-                  <label for="exampleInputtgl_bayar1" class="form-label">Tanggal Bayar</label>
-                  <input type="date" class="form-control" id="exampleInputtgl_bayar1" aria-describedby="tgl_bayarHelp" name="tgl_bayar" required>
+                  <label for="exampleInputno_bukti1" class="form-label">Tanggal Bayar</label>
+                  <input type="date" class="form-control" id="exampleInputno_bukti1" aria-describedby="no_buktiHelp" name="tgl_bayar" <?php if ($hasil['tgl_bayar'] == null) { ?> placeholder="Masukan Nomor Bukti Transaksi Pembayaran" required <?php } else { ?> value="<?= $hasil['tgl_bayar']; ?>"> <?php } ?>
                 </div>
                 <input type="hidden" name="validasi">
                 <input type="hidden" name="tgl_order">
-                <button type="submit" class="btn btn-success col-2 " name="simpan">Simpan</button>
+                <?php
+                if ($hasil['bukti_bayar'] == null) { ?>
+                  <button type="submit" class="btn btn-success col-2 " name="simpan">Simpan</button>
+                <?php } else { ?>
+                  <a href="daftar_invoice.php" class="btn btn-primary col-2">Kembali</a>
+                <?php } ?>
 
               </form>
             </div>

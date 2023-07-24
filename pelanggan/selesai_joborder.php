@@ -1,14 +1,12 @@
 <?php
 session_start();
 $id = $_GET['id'];
-require '../../koneksi.php';
+require '../koneksi.php';
 $koneksi = koneksi();
 $sql = $koneksi->query("SELECT * FROM job_order INNER JOIN pelanggan ON job_order.id_pelanggan=pelanggan.id_pelanggan WHERE id_joborder='$id'");
 $hasil = $sql->fetch_assoc();
-if (!isset($_SESSION['login_karyawan'])) {
+if (!isset($_SESSION['login_pelanggan'])) {
   header('location:../../login.php');
-} else if ($_SESSION['level'] !== 'admin_ops') {
-  header('location:../404.php');
 }
 ?>
 
@@ -26,11 +24,11 @@ if (!isset($_SESSION['login_karyawan'])) {
   <title>Administrasi</title>
 
   <!-- Custom fonts for this template-->
-  <link href="../../sbadmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="../sbadmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
   <!-- Custom styles for this template-->
-  <link href="../../sbadmin/css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="../sbadmin/css/sb-admin-2.min.css" rel="stylesheet">
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -42,7 +40,7 @@ if (!isset($_SESSION['login_karyawan'])) {
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <?php include('../../layout/siderbar_admin_ops.php'); ?>
+    <?php include('../layout/siderbar_pelanggan.php'); ?>
 
 
     <!-- Content Wrapper -->
@@ -94,15 +92,14 @@ if (!isset($_SESSION['login_karyawan'])) {
                   <a href="daftar_joborder.php" class="btn btn-primary">Kembali Daftar Job order</a>
                 <?php } elseif ($hasil['validasi'] == 'Selesai') { ?>
                   <a href="daftar_joborder.php" class="btn btn-primary">Kembali Daftar Job order</a>
-                <?php } elseif ($hasil['validasi'] == 'Proses kirim') { ?>
+                <?php } elseif ($hasil['validasi'] == 'Pengajuan') { ?>
                   <a href="daftar_joborder.php" class="btn btn-primary">Kembali Daftar Job order</a>
                 <?php } elseif ($hasil['validasi'] == 'Paid') { ?>
                   <a href="daftar_joborder.php" class="btn btn-primary">Kembali Daftar Job order</a>
                 <?php } elseif ($hasil['validasi'] == 'Proses') { ?>
                   <a href="daftar_joborder.php" class="btn btn-primary">Kembali Daftar Job order</a>
                 <?php } else { ?>
-                  <button type="submit" class="btn btn-success col-2 " name="simpan">Approve</button>
-                  <button type="submit" class="btn btn-danger col-2 " name="tolak">Tolak</button>
+                  <button type="submit" class="btn btn-success col-2 " name="simpan">Terima</button>
                 <?php }
                 ?>
 
@@ -119,23 +116,11 @@ if (!isset($_SESSION['login_karyawan'])) {
       <?php
       if (isset($_POST['simpan'])) {
         $tanggal_approve = date('Y-m-d');
-        $sql = ("UPDATE job_order SET biaya_joborder='$_POST[biaya]', validasi='Proses',tgl_approve='$tanggal_approve' WHERE id_joborder='$id'") or die(mysqli_error($koneksi));
+        $sql = ("UPDATE job_order SET validasi='Selesai' WHERE id_joborder='$id'") or die(mysqli_error($koneksi));
         if ($koneksi->query($sql) == true) {
           echo "
           <script>
-          alert('Data Telah Disetujui!');
-          window.location.href='daftar_joborder.php';
-          </script>
-          ";
-        }
-      }
-      if (isset($_POST['tolak'])) {
-        $tanggal_aprove = date('Y-m-d');
-        $sql = ("UPDATE job_order SET validasi='Ditolak',tgl_approve='$tanggal_approve' WHERE id_joborder='$id'") or die(mysqli_error($koneksi));
-        if ($koneksi->query($sql) == true) {
-          echo "
-          <script>
-          alert('Data Telah Ditolak!');
+          alert('Berhasil menerima barang!');
           window.location.href='daftar_joborder.php';
           </script>
           ";
@@ -165,14 +150,14 @@ if (!isset($_SESSION['login_karyawan'])) {
   </a>
 
   <!-- Bootstrap core JavaScript-->
-  <script src="../../sbadmin/vendor/jquery/jquery.min.js"></script>
-  <script src="../../sbadmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../sbadmin/vendor/jquery/jquery.min.js"></script>
+  <script src="../sbadmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Core plugin JavaScript-->
-  <script src="../../sbadmin/vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="../sbadmin/vendor/jquery-easing/jquery.easing.min.js"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="../../sbadmin/js/sb-admin-2.min.js"></script>
+  <script src="../sbadmin/js/sb-admin-2.min.js"></script>
 
   <!-- Bootstrap -->
   <script src="<script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

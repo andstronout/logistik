@@ -4,7 +4,7 @@ require '../../koneksi.php';
 $koneksi = koneksi();
 if (!isset($_SESSION['login_karyawan'])) {
   header('location:../../login.php');
-} else if ($_SESSION['level'] !== 'admin_ops') {
+} else if ($_SESSION['level'] !== 'ekspedisi') {
   header('location:../../login.php');
 }
 ?>
@@ -39,7 +39,7 @@ if (!isset($_SESSION['login_karyawan'])) {
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <?php include('../../layout/siderbar_admin_ops.php'); ?>
+    <?php include('../../layout/siderbar_ekspedisi.php'); ?>
 
 
     <!-- Content Wrapper -->
@@ -52,7 +52,7 @@ if (!isset($_SESSION['login_karyawan'])) {
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h4 mb-4 text-gray-800">Tambah Data PIB</h1>
+          <h1 class="h4 mb-4 text-gray-800">Tambah Data Delivery Order</h1>
           <div class="card shadow mb-4">
             <div class="card-body">
               <form method="post">
@@ -87,24 +87,21 @@ if (!isset($_SESSION['login_karyawan'])) {
                         <input type="text" class="form-control" id="exampleInputpelanggan1" aria-describedby="pelangganHelp" name="id_pelanggan" value="<?= $sql['nama_pelanggan']; ?>" readonly>
                       </div>
                       <div class="mb-3 ">
-                        <label for="exampleInputnopib1" class="form-label">Nomor PIB</label>
-                        <input type="text" class="form-control" id="exampleInputnopib1" aria-describedby="nopibHelp" name="no_pib" placeholder="Masukan nomor pib" required>
+                        <label for="exampleInputnodo1" class="form-label">Nomor Delivery Order</label>
+                        <input type="text" class="form-control" id="exampleInputnodo1" aria-describedby="nodoHelp" name="no_do" placeholder="Masukan nomor Delivery Order" required>
                       </div>
                       <div class="mb-3 ">
-                        <label for="exampleInputpengajuan1" class="form-label">Nomor Pengajuan</label>
-                        <input type="text" class="form-control" id="exampleInputpengajuan1" aria-describedby="pengajuanHelp" name="no_pengajuan" placeholder="Masukan nomor pengajuan">
+                        <label for="exampleInputfrom1" class="form-label">Asal Logistik</label>
+                        <input type="text" class="form-control" id="exampleInputfrom1" aria-describedby="fromHelp" name="from" placeholder="Masukan Asal Logistik">
                       </div>
-                      <div class="mb-3">
-                        <label for="exampleInputbiaya1" class="form-label">Biaya PIB</label>
-                        <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya" placeholder="Masukan Biaya">
-                      </div>
+                      <input type="hidden" name="status_do">
                       <button type="submit" class="btn btn-success col-2 " name="simpan">Simpan</button>
                     </div>
                 <?php } else {
                     echo '
                     <script>
                     alert("Job Order tidak boleh kosong!");
-                    window.location.href= "tambah_pib.php";
+                    window.location.href= "tambah_do.php";
                     </script>                    
                     ';
                   }
@@ -130,22 +127,22 @@ if (!isset($_SESSION['login_karyawan'])) {
         // var_dump($idjob, $idpelanggan);
         $tanggalpib = date('Y-m-d');
 
-        $cari = $koneksi->query("SELECT id_joborder FROM pib WHERE id_joborder='$_SESSION[id_job]'");
+        $cari = $koneksi->query("SELECT id_joborder FROM do WHERE id_joborder='$_SESSION[id_job]'");
         $dapet = $cari->fetch_assoc();
 
         if ($dapet != null) {
           echo '
           <script>
           alert("Job Order sudah dipakai!");
-          window.location.href= "tambah_pib.php";
+          window.location.href= "tambah_do.php";
           </script>                    
           ';
         } else {
-          $insert = $koneksi->query("INSERT INTO pib (no_pib,id_joborder,no_pengajuan,id_pelanggan,tgl_pib,biaya_pib) VALUES ('$_POST[no_pib]','$_SESSION[id_job]','$_POST[no_pengajuan]','$_SESSION[id_pel]','$tanggalpib','$_POST[biaya]')") or die(mysqli_error($koneksi));
+          $insert = $koneksi->query("INSERT INTO do (no_do,`from`,id_pelanggan,id_joborder,status_do) VALUES ('$_POST[no_do]','$_POST[from]','$_SESSION[id_pel]','$_SESSION[id_job]','Pengajuan')") or die(mysqli_error($koneksi));
           echo "
             <script>
             alert('Data Berhasil Ditambah');
-            document.location.href = 'daftar_pib.php';
+            document.location.href = 'daftar_do.php';
             </script>
             ";
           session_unset($_SESSION['id_job'], $_SESSION['id_pel']);

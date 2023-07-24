@@ -26,8 +26,8 @@
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Kelola Profil:</h6>
-        <a class="collapse-item" href="../edit_profil.php">Edit Profil</a>
-        <a class="collapse-item" href="../edit_password.php">Ganti Password</a>
+        <a class="collapse-item" href="edit_profil.php">Edit Profil</a>
+        <a class="collapse-item" href="edit_password.php">Ganti Password</a>
       </div>
     </div>
   </li>
@@ -42,16 +42,16 @@
 
   <!-- Nav Item - Charts -->
   <li class="nav-item">
-    <a class="nav-link" href="daftar_karyawan.php">
+    <a class="nav-link" href="daftar_joborder.php">
       <i class="fas fa-fw fa-table"></i>
-      <span>Data Karyawan</span></a>
+      <span>Data Job Order</span></a>
   </li>
 
   <!-- Nav Item - Tables -->
   <li class="nav-item">
-    <a class="nav-link" href="daftar_pelanggan.php">
+    <a class="nav-link" href="daftar_invoice.php">
       <i class="fas fa-fw fa-chart-area"></i>
-      <span>Data Pelanggan</span></a>
+      <span>Data Invoice</span></a>
   </li>
 
   <!-- Divider -->
@@ -88,13 +88,13 @@
 
         <!-- Nav Item - User Information -->
         <?php
-        $sq = $koneksi->query("SELECT * FROM karyawan WHERE id_karyawan='$_SESSION[id_karyawan]'");
+        $sq = $koneksi->query("SELECT nama_pelanggan FROM pelanggan WHERE id_pelanggan='$_SESSION[id_pelanggan]'");
         $que = $sq->fetch_assoc();
-        $nama = explode(" ", $que['nama_karyawan']);
+        $nama = explode(" ", $que['nama_pelanggan']);
         ?>
         <li class="nav-item dropdown no-arrow">
           <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="mr-2 d-none d-lg-inline text-gray-600 small"><b>Hi <?= $nama[0]; ?></b></span>
+            <span class="mr-2 d-none d-lg-inline text-gray-600 small"><b><?= $que['nama_pelanggan']; ?></b></span>
           </a>
           <!-- Dropdown - User Information -->
           <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -125,7 +125,7 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="../../logout.php">Logout</a>
+            <a class="btn btn-primary" href="../logout.php">Logout</a>
           </div>
         </div>
       </div>

@@ -4,10 +4,11 @@ require '../../koneksi.php';
 $koneksi = koneksi();
 if (!isset($_SESSION['login_karyawan'])) {
   header('location:../../login.php');
-} else if ($_SESSION['level'] !== 'billing') {
-  header('location:../../login.php');
+} else if ($_SESSION['level'] !== 'ops') {
+  header('location:../404.php');
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,7 +37,7 @@ if (!isset($_SESSION['login_karyawan'])) {
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <?php include('../../layout/siderbar_billing.php'); ?>
+    <?php include('../../layout/siderbar_ops.php'); ?>
 
 
     <!-- Content Wrapper -->

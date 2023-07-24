@@ -45,7 +45,7 @@ $koneksi = koneksi();
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Data Job Order</h1>
+            <h1 class="h3 mb-0 text-gray-800">Data Invoice</h1>
           </div>
 
           <!-- Data Table -->
@@ -73,7 +73,7 @@ $koneksi = koneksi();
                     ?>
                       <tr>
                         <td><?= $no++; ?></td>
-                        <td>JOB-<?= $data['tgl_order'] . '-' . $data['id_joborder']; ?></td>
+                        <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
                         <td>Rp. <?= number_format($data['biaya_total']); ?> ,-</td>
                         <td>
                           <?php
@@ -94,12 +94,22 @@ $koneksi = koneksi();
                           ?>
                         </td>
                         <td>
-                          <a href="upload_buktibayar.php?id=<?= $data['id_tagihan']; ?>" class="btn btn-info btn-icon-split btn-sm">
-                            <span class="icon text-white-50">
-                              <i class="fas fa-info-circle"></i>
-                            </span>
-                            <span class="text">Upload Bukti Bayar</span>
-                          </a>
+                          <?php
+                          if ($data['bukti_bayar'] == null) { ?>
+                            <a href="upload_buktibayar.php?id=<?= $data['id_tagihan']; ?>" class="btn btn-info btn-icon-split btn-sm">
+                              <span class="icon text-white-50">
+                                <i class="fas fa-info-circle"></i>
+                              </span>
+                              <span class="text">Kirim Bukti Bayar</span>
+                            </a>
+                          <?php } else { ?>
+                            <a href="upload_buktibayar.php?id=<?= $data['id_tagihan']; ?>" class="btn btn-success btn-icon-split btn-sm">
+                              <span class="icon text-white-50">
+                                <i class="fas fa-info-circle"></i>
+                              </span>
+                              <span class="text">Lihat Bukti Bayar</span>
+                            </a>
+                          <?php } ?>
                         </td>
                       <?php } ?>
                       </tr>
@@ -160,16 +170,16 @@ $koneksi = koneksi();
         dom: 'Bfrtip',
         buttons: [{
             extend: 'excelHtml5',
-            title: 'Data Job Order',
+            title: 'Data Invoice',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6]
+              columns: [0, 1, 2, 3, 4]
             }
           },
           {
             extend: 'pdfHtml5',
-            title: 'Data Job Order',
+            title: 'Data Invoice',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6]
+              columns: [0, 1, 2, 3, 4]
             }
           }
         ]

@@ -2,6 +2,11 @@
 session_start();
 require '../../koneksi.php';
 $koneksi = koneksi();
+if (!isset($_SESSION['login_karyawan'])) {
+  header('location:../../login.php');
+} else if ($_SESSION['level'] !== 'admin_ops') {
+  header('location:../404.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,6 +64,7 @@ $koneksi = koneksi();
                       <th>ID Job Order</th>
                       <th>Nama Customer</th>
                       <th>Tanggal Order</th>
+                      <th>Biaya Job Order</th>
                       <th>Status</th>
                       <th>Aksi</th>
                     </tr>
@@ -71,9 +77,10 @@ $koneksi = koneksi();
                     ?>
                       <tr>
                         <td><?= $no++; ?></td>
-                        <td>JOB-<?= $data['tgl_order'] . '-' . $data['id_joborder']; ?></td>
+                        <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
                         <td><?= $data['nama_pelanggan']; ?></td>
                         <td><?= $data['tgl_order']; ?></td>
+                        <td><?= 'Rp. ' . number_format($data['biaya_joborder']); ?></td>
                         <td>
                           <?php
                           if ($data['validasi'] == 'Pengajuan') {
@@ -82,6 +89,10 @@ $koneksi = koneksi();
                             $color = '#FF6666';
                           } elseif ($data['validasi'] == 'Selesai') {
                             $color = '#1D5D9B';
+                          } elseif ($data['validasi'] == 'Paid') {
+                            $color = '#A076F9';
+                          } elseif ($data['validasi'] == 'Proses kirim') {
+                            $color = '#F2BED1';
                           } else {
                             $color = '#35A29F';
                           }
@@ -160,14 +171,14 @@ $koneksi = koneksi();
             extend: 'excelHtml5',
             title: 'Data Job Order',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6]
+              columns: [0, 1, 2, 3, 4, 5]
             }
           },
           {
             extend: 'pdfHtml5',
             title: 'Data Job Order',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6]
+              columns: [0, 1, 2, 3, 4, 5]
             }
           }
         ]

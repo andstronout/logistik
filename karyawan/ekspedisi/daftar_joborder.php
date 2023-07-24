@@ -2,15 +2,12 @@
 session_start();
 require '../../koneksi.php';
 $koneksi = koneksi();
-// var_dump($_SESSION['level']);
-
 if (!isset($_SESSION['login_karyawan'])) {
   header('location:../../login.php');
-} else if ($_SESSION['level'] !== 'admin') {
-  header('location:../../login.php');
+} else if ($_SESSION['level'] !== 'ekspedisi') {
+  header('location:../404.php');
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,8 +27,6 @@ if (!isset($_SESSION['login_karyawan'])) {
 
   <!-- Custom styles for this template-->
   <link href="../../sbadmin/css/sb-admin-2.min.css" rel="stylesheet">
-
-  <!-- URL Datatables -->
   <!-- dataTable URL -->
   <link href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/b-print-2.3.6/datatables.min.css" rel="stylesheet" />
 
@@ -41,9 +36,7 @@ if (!isset($_SESSION['login_karyawan'])) {
 
   <!-- Page Wrapper -->
   <div id="wrapper">
-
-    <?php include('../../layout/siderbar_admin.php'); ?>
-
+    <?php include('../../layout/siderbar_ekspedisi.php') ?>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -51,56 +44,63 @@ if (!isset($_SESSION['login_karyawan'])) {
       <!-- Main Content -->
       <div id="content">
 
+
         <!-- Begin Page Content -->
         <div class="container-fluid">
 
-
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Data Pelanggan</h1>
-            <a href="tambah_pelanggan.php" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Tambah Data</a>
+            <h1 class="h3 mb-0 text-gray-800">Data Job Order</h1>
           </div>
 
           <!-- Data Table -->
           <div class="card shadow mb-4">
             <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-bordered" id="myTable" width="100%" cellspacing="0">
+              <div class="table-responsive ">
+                <table class="table table-bordered " id="myTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th>No</th>
-                      <th>Nama Pelanggan</th>
-                      <th>Email</th>
-                      <th>Alamat</th>
-                      <th>Nomor Telephone</th>
-                      <th width=20%>Aksi</th>
+                      <th>ID Job Order</th>
+                      <th>Nama Customer</th>
+                      <th>Tanggal Order</th>
+                      <th>Biaya Job Order</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
-                    $sql = $koneksi->query("SELECT * FROM pelanggan");
+                    $sql = $koneksi->query("SELECT * FROM job_order INNER JOIN pelanggan ON pelanggan.id_pelanggan=job_order.id_pelanggan");
                     $no = 1;
                     while ($data = $sql->fetch_assoc()) {
                     ?>
                       <tr>
                         <td><?= $no++; ?></td>
+                        <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
                         <td><?= $data['nama_pelanggan']; ?></td>
-                        <td><?= $data['email_pelanggan']; ?></td>
-                        <td><?= $data['alamat_pelanggan']; ?></td>
-                        <td><?= $data['tlp_pelanggan']; ?></td>
+                        <td><?= $data['tgl_order']; ?></td>
+                        <td><?= 'Rp. ' . number_format($data['biaya_joborder']); ?></td>
                         <td>
-                          <a href="edit_pelanggan.php?id=<?= $data['id_pelanggan']; ?>" class="btn btn-info btn-icon-split btn-sm">
-                            <span class="icon text-white-50">
-                              <i class="fas fa-info-circle"></i>
+                          <?php
+                          if ($data['validasi'] == 'Pengajuan') {
+                            $color = '#F1C93B';
+                          } elseif ($data['validasi'] == 'Ditolak') {
+                            $color = '#FF6666';
+                          } elseif ($data['validasi'] == 'Selesai') {
+                            $color = '#1D5D9B';
+                          } elseif ($data['validasi'] == 'Paid') {
+                            $color = '#A076F9';
+                          } elseif ($data['validasi'] == 'Proses kirim') {
+                            $color = '#F2BED1';
+                          } else {
+                            $color = '#35A29F';
+                          }
+                          ?>
+                          <div class="rounded-pill text-center" style="background-color: <?= $color; ?>;">
+                            <span style="padding: 10px;" class="text-light">
+                              <?= $data['validasi']; ?>
                             </span>
-                            <span class="text">Edit</span>
-                          </a>
-                          <a href="hapus_pelanggan.php?id=<?= $data['id_pelanggan']; ?>" class="btn btn-danger btn-icon-split btn-sm" onclick="return confirm('Are you sure you want to delete?')">
-                            <span class="icon text-white-50">
-                              <i class="fas fa-trash"></i>
-                            </span>
-                            <span class="text">Hapus</span>
-                          </a>
+                          </div>
                         </td>
                       <?php } ?>
                       </tr>
@@ -147,6 +147,7 @@ if (!isset($_SESSION['login_karyawan'])) {
 
   <!-- Custom scripts for all pages-->
   <script src="../../sbadmin/js/sb-admin-2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
   <!-- URL Datatables -->
   <!-- dataTable -->
@@ -159,16 +160,16 @@ if (!isset($_SESSION['login_karyawan'])) {
         dom: 'Bfrtip',
         buttons: [{
             extend: 'excelHtml5',
-            title: 'Data Pelanggan',
+            title: 'Data Job Order',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4]
+              columns: [0, 1, 2, 3, 4, 5]
             }
           },
           {
             extend: 'pdfHtml5',
-            title: 'Data Pelanggan',
+            title: 'Data Job Order',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4]
+              columns: [0, 1, 2, 3, 4, 5]
             }
           }
         ]
