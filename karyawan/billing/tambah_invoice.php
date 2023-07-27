@@ -120,8 +120,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                         <label for="exampleInputbiaya1" class="form-label">Total Biaya</label>
                         <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya_total" value="<?= 'Rp.  ' . number_format($total) . ',-'; ?>" readonly>
                       </div>
-                      <h6 class="mb-3">Apakah data sudah benar?</h6>
-                      <button type="submit" class="btn btn-success col-2 " name="simpan">Buat Invoice</button>
+                      <button type="submit" class="btn btn-success col-2 " name="simpan" onclick="return confirm('Apakah Sudah benar?')">Buat Invoice</button>
                     </div>
                 <?php } else {
                     echo '

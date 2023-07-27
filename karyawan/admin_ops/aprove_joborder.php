@@ -101,7 +101,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                 <?php } elseif ($hasil['validasi'] == 'Proses') { ?>
                   <a href="daftar_joborder.php" class="btn btn-primary">Kembali Daftar Job order</a>
                 <?php } else { ?>
-                  <button type="submit" class="btn btn-success col-2 " name="simpan">Approve</button>
+                  <button type="submit" class="btn btn-success col-2 " name="simpan" onclick="return confirm('Anda yakin approve job order ini?')">Approve</button>
                   <button type="submit" class="btn btn-danger col-2 " name="tolak">Tolak</button>
                 <?php }
                 ?>

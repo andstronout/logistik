@@ -101,7 +101,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                 <?php } elseif ($hasil['validasi'] == 'Paid') { ?>
                   <a href="daftar_invoice.php" class="btn btn-primary">Kembali Ke Daftar Invoice</a>
                 <?php } else { ?>
-                  <button type="submit" class="btn btn-success col-2 " name="simpan">Approve</button>
+                  <button type="submit" class="btn btn-success col-2 " name="simpan" onclick="return confirm('Anda yakin validasi invoice ini?')">Approve</button>
                   <a href="daftar_invoice.php" class="btn btn-primary">Kembali Ke Daftar Invoice</a>
                 <?php }
                 ?>

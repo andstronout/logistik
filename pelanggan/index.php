@@ -37,13 +37,23 @@ $koneksi = koneksi();
       <!-- Main Content -->
       <div id="content">
 
-
         <!-- Begin Page Content -->
         <div class="container-fluid">
 
-          <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800">Hallo Pelanggan</h1>
 
+          <!-- Page Heading -->
+          <h1 class="h3 mb-4 text-gray-800">Halo Admin</h1>
+          <!-- 404 Error Text -->
+          <header class="masthead bg-light text-dark text-center">
+            <div class="container d-flex align-items-center flex-column">
+              <!-- Masthead Avatar Image-->
+              <img class="masthead-avatar mb-5" src="../../img/logo_img.png" alt="..." width="700px" />
+              <!-- Masthead Heading-->
+              <h1 class="masthead-heading text-uppercase mb-0">Best Customs and Broker Protection</h1>
+              <!-- Icon Divider-->
+
+            </div>
+          </header>
         </div>
         <!-- /.container-fluid -->
 
@@ -51,7 +61,7 @@ $koneksi = koneksi();
       <!-- End of Main Content -->
 
       <!-- Footer -->
-      <footer class="sticky-footer bg-white">
+      <footer class="sticky-footer bg-white mt-5">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
             <span>Copyright &copy; PT. Speedmark Indonesia</span>

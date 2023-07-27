@@ -93,7 +93,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                         <label for="exampleInputbiaya1" class="form-label">Biaya PIB</label>
                         <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya" placeholder="Masukan Biaya">
                       </div>
-                      <button type="submit" class="btn btn-success col-2 " name="simpan">Simpan</button>
+                      <button type="submit" class="btn btn-success col-2 " name="simpan" onclick="return confirm('Apakah Sudah benar?')">Simpan</button>
                     </div>
                 <?php
                   } else {

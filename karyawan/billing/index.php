@@ -52,12 +52,16 @@ if (!isset($_SESSION['login_karyawan'])) {
           <!-- Page Heading -->
           <h1 class="h3 mb-4 text-gray-800">Halo Admin</h1>
           <!-- 404 Error Text -->
-          <div class="text-center">
-            <div class="error mx-auto" data-text="404">404</div>
-            <p class="lead text-gray-800 mb-5">Page Not Found</p>
-            <p class="text-gray-500 mb-0">It looks like you found a glitch in the matrix...</p>
-            <a href="index.php">&larr; Back to Dashboard</a>
-          </div>
+          <header class="masthead bg-light text-dark text-center">
+            <div class="container d-flex align-items-center flex-column">
+              <!-- Masthead Avatar Image-->
+              <img class="masthead-avatar mb-5" src="../../img/logo_img.png" alt="..." width="700px" />
+              <!-- Masthead Heading-->
+              <h1 class="masthead-heading text-uppercase mb-0">Best Customs and Broker Protection</h1>
+              <!-- Icon Divider-->
+
+            </div>
+          </header>
         </div>
         <!-- /.container-fluid -->
 
@@ -65,7 +69,7 @@ if (!isset($_SESSION['login_karyawan'])) {
       <!-- End of Main Content -->
 
       <!-- Footer -->
-      <footer class="sticky-footer bg-white">
+      <footer class="sticky-footer bg-white mt-5">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
             <span>Copyright &copy; PT. Speedmark Indonesia</span>

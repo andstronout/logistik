@@ -95,7 +95,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                         <input type="text" class="form-control" id="exampleInputfrom1" aria-describedby="fromHelp" name="from" placeholder="Masukan Asal Logistik">
                       </div>
                       <input type="hidden" name="status_do">
-                      <button type="submit" class="btn btn-success col-2 " name="simpan">Simpan</button>
+                      <button type="submit" class="btn btn-success col-2 " name="simpan" onclick="return confirm('Apakah Sudah benar?')">Simpan</button>
                     </div>
                 <?php } else {
                     echo '
