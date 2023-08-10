@@ -70,10 +70,6 @@ if (!isset($_SESSION['login_pelanggan'])) {
                   <input type="text" class="form-control" id="exampleInputtgl1" aria-describedby="tglHelp" value="<?= ($hasil['tgl_order']); ?>" readonly>
                 </div>
                 <div class="mb-3">
-                  <label for="exampleInputtgl1" class="form-label"> Bill of Landing</label>
-                  <input type="text" class="form-control" id="exampleInputtgl1" aria-describedby="tglHelp" value="<?= ($hasil['no_bl']); ?>" readonly>
-                </div>
-                <div class="mb-3">
                   <label for="exampleInputtgl1" class="form-label"> Packing List</label>
                   <input type="text" class="form-control" id="exampleInputtgl1" aria-describedby="tglHelp" value="<?= ($hasil['no_packing_list']); ?>" readonly>
                 </div>

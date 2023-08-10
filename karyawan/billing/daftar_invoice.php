@@ -80,7 +80,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                       <tr>
                         <td><?= $no++; ?></td>
                         <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
-                        <td>Rp. <?= number_format($data['biaya_total']); ?> ,-</td>
+                        <td>Rp. <?= number_format($data['biaya_joborder']); ?> ,-</td>
                         <td>
                           <?php
                           if ($data['bukti_bayar'] == null) {

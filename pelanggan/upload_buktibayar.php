@@ -60,7 +60,7 @@ $hasil = $sql->fetch_assoc();
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputpacking_list1" class="form-label">Total Biaya</label>
-                  <input type="text" class="form-control" id="exampleInputpacking_list1" aria-describedby="packing_listHelp" value="<?php echo 'Rp. ' . number_format($hasil['biaya_total']); ?>" readonly>
+                  <input type="text" class="form-control" id="exampleInputpacking_list1" aria-describedby="packing_listHelp" value="<?php echo 'Rp. ' . number_format($hasil['biaya_joborder']); ?>" readonly>
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputno_bukti1" class="form-label">Nomor Transaksi</label>

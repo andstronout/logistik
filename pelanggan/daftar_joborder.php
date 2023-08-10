@@ -58,7 +58,6 @@ $koneksi = koneksi();
                     <tr>
                       <th>No</th>
                       <th>ID Job Order</th>
-                      <th>Bill Of Landing</th>
                       <th>Packing List</th>
                       <th>Faktur</th>
                       <th>Tanggal Order</th>
@@ -76,7 +75,6 @@ $koneksi = koneksi();
                       <tr>
                         <td><?= $no++; ?></td>
                         <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
-                        <td><?= $data['no_bl']; ?></td>
                         <td><?= $data['no_packing_list']; ?></td>
                         <td><?= $data['no_faktur']; ?></td>
                         <td><?= $data['tgl_order']; ?></td>
@@ -170,14 +168,14 @@ $koneksi = koneksi();
             extend: 'excelHtml5',
             title: 'Data Job Order',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6]
+              columns: [0, 1, 2, 3, 4, 5]
             }
           },
           {
             extend: 'pdfHtml5',
             title: 'Data Job Order',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6]
+              columns: [0, 1, 2, 3, 4, 5]
             }
           }
         ]

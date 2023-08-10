@@ -46,13 +46,6 @@
       <i class="fas fa-fw fa-table"></i>
       <span>Data Job Order</span></a>
   </li>
-
-  <!-- Nav Item - Tables -->
-  <li class="nav-item">
-    <a class="nav-link" href="daftar_pib.php">
-      <i class="fas fa-fw fa-chart-area"></i>
-      <span>Data Dokumen PIB</span></a>
-  </li>
   <!-- Nav Item - Tables -->
   <li class="nav-item">
     <a class="nav-link" href="daftar_do.php">

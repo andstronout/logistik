@@ -54,10 +54,6 @@ $hasil = $sql->fetch_assoc();
             <div class="card-body">
               <form method="post">
                 <div class="mb-3">
-                  <label for="exampleInputno_bl1" class="form-label">Bill Of Landing</label>
-                  <input type="text" class="form-control" id="exampleInputno_bl1" aria-describedby="no_blHelp" name="no_bl" placeholder="Masukan nomor Bill" required>
-                </div>
-                <div class="mb-3">
                   <label for="exampleInputpacking_list1" class="form-label">Packing List</label>
                   <input type="text" class="form-control" id="exampleInputpacking_list1" aria-describedby="packing_listHelp" name="no_packing_list" placeholder="Masukan nomor packing list" required>
                 </div>
@@ -77,18 +73,11 @@ $hasil = $sql->fetch_assoc();
         <!-- /.container-fluid -->
         <?php
         if (isset($_POST['simpan'])) {
-          $nobl = $_POST['no_bl'];
           $nopacking = $_POST['no_packing_list'];
           $faktur = $_POST['no_faktur'];
           // var_dump($nobl, $nopacking, $faktur);
 
-          if ($hasil['no_bl'] == $nobl) {
-            echo '
-              <script>
-              alert("Nomor Bill Of Landing tidak boleh sama!");
-              </script>            
-            ';
-          } elseif ($hasil['no_packing_list'] == $nopacking) {
+          if ($hasil['no_packing_list'] == $nopacking) {
             echo '
               <script>
               alert("Nomor Packing List tidak boleh sama!");
@@ -101,7 +90,7 @@ $hasil = $sql->fetch_assoc();
               </script>            
             ';
           } else {
-            $insert = $koneksi->query("INSERT INTO job_order (id_pelanggan, no_bl, no_packing_list, no_faktur,validasi, tgl_order) VALUES ('$id_pelanggan','$nobl','$nopacking','$faktur','Pengajuan','$tanggal')");
+            $insert = $koneksi->query("INSERT INTO job_order (id_pelanggan, no_packing_list, no_faktur,validasi, tgl_order) VALUES ('$id_pelanggan','$nopacking','$faktur','Pengajuan','$tanggal')") or die(mysqli_error($koneksi));
             echo '
               <script>
               alert("Pengajuan Job Order Berhasil!");

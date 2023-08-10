@@ -69,20 +69,15 @@ if (!isset($_SESSION['login_karyawan'])) {
                   $ambil = $_POST['id_job'];
                   $cek = explode('-', $ambil);
                   $cekid = $cek[1];
-                  $sq = $koneksi->query("SELECT * FROM job_order INNER JOIN pelanggan ON pelanggan.id_pelanggan=job_order.id_pelanggan INNER JOIN pib ON pib.id_joborder=job_order.id_joborder INNER JOIN sppb ON pib.no_pib=sppb.no_pib WHERE job_order.id_joborder='$cekid'") or die(mysqli_error($koneksi));
+                  $sq = $koneksi->query("SELECT * FROM job_order INNER JOIN pelanggan ON pelanggan.id_pelanggan=job_order.id_pelanggan WHERE job_order.id_joborder='$cekid'") or die(mysqli_error($koneksi));
                   $sql = $sq->fetch_assoc();
 
-                  $total = $sql['biaya_joborder'] + $sql['biaya_pib'] + $sql['biaya_sppb'];
                   // var_dump($sql);
                   // ini data dapet dari cek
                   $_SESSION['id_job'] = $sql['id_joborder'];
                   $_SESSION['id_pel'] = $sql['id_pelanggan'];
                   $_SESSION['biaya_joborder'] = $sql['biaya_joborder'];
-                  $_SESSION['no_pib'] = $sql['no_pib'];
-                  $_SESSION['biaya_pib'] = $sql['biaya_pib'];
-                  $_SESSION['no_sppb'] = $sql['no_sppb'];
-                  $_SESSION['biaya_sppb'] = $sql['biaya_sppb'];
-                  $_SESSION['total'] = $sql['biaya_joborder'] + $sql['biaya_pib'] + $sql['biaya_sppb'];;
+
                   if ($sql != null) { ?>
                     <!-- End Cek Job Order -->
 
@@ -95,31 +90,13 @@ if (!isset($_SESSION['login_karyawan'])) {
                         <label for="exampleInputpelanggan1" class="form-label">Nama Pelanggan</label>
                         <input type="text" class="form-control" id="exampleInputpelanggan1" aria-describedby="pelangganHelp" name="id_pelanggan" value="<?= $sql['nama_pelanggan']; ?>" readonly>
                       </div>
-                      <div class="mb-3 ">
-                        <label for="exampleInputnopib1" class="form-label">Nomor PIB</label>
-                        <input type="text" class="form-control" id="exampleInputnopib1" aria-describedby="nopibHelp" name="no_pib" value="<?= $sql['no_pib']; ?>" readonly>
-                      </div>
-                      <div class="mb-3">
-                        <label for="exampleInputbiaya1" class="form-label">Biaya PIB</label>
-                        <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya_pib" value="<?= 'Rp. ' . number_format($sql['biaya_pib']); ?>" readonly>
-                      </div>
-                      <div class="mb-3 ">
-                        <label for="exampleInputnopib1" class="form-label">Nomor SPPB</label>
-                        <input type="text" class="form-control" id="exampleInputnopib1" aria-describedby="nopibHelp" name="no_pib" value="<?= $sql['no_sppb']; ?>" readonly>
-                      </div>
-                      <div class="mb-3">
-                        <label for="exampleInputbiaya1" class="form-label">Biaya SPPB</label>
-                        <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya_sppb" value="<?= 'Rp. ' . number_format($sql['biaya_sppb']); ?>" readonly>
-                      </div>
-                      <div class="mb-3">
-                        <label for="exampleInputbiaya1" class="form-label">Biaya Job Order</label>
-                        <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya_joborder" value="<?= 'Rp. ' . number_format($sql['biaya_joborder']); ?>" readonly>
-                      </div>
+
                       <hr>
                       <div class="mb-3">
-                        <label for="exampleInputbiaya1" class="form-label">Total Biaya</label>
-                        <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya_total" value="<?= 'Rp.  ' . number_format($total) . ',-'; ?>" readonly>
+                        <label for="exampleInputbiaya1" class="form-label">Total Biaya Job Order</label>
+                        <input type="text" class="form-control" id="exampleInputbiaya1" name="biaya_joborder" value="<?= 'Rp. ' . number_format($sql['biaya_joborder']); ?>" readonly>
                       </div>
+
                       <button type="submit" class="btn btn-success col-2 " name="simpan" onclick="return confirm('Apakah Sudah benar?')">Buat Invoice</button>
                     </div>
                 <?php } else {
@@ -145,7 +122,7 @@ if (!isset($_SESSION['login_karyawan'])) {
 
       <?php
       if (isset($_POST['simpan'])) {
-
+        // benerin disini
         $cari = $koneksi->query("SELECT id_joborder FROM invoice WHERE id_joborder='$_SESSION[id_job]'");
         $dapet = $cari->fetch_assoc();
 
@@ -153,11 +130,18 @@ if (!isset($_SESSION['login_karyawan'])) {
           echo '
           <script>
           alert("Job Order sudah dipakai!");
-          window.location.href= "tambah_pib.php";
+          window.location.href= "tambah_invoice.php";
+          </script>                    
+          ';
+        } elseif ($dapet['biaya_joborder'] == null) {
+          echo '
+          <script>
+          alert("Job Order belum di approve!");
+          window.location.href= "tambah_invoice.php";
           </script>                    
           ';
         } else {
-          $insert = $koneksi->query("INSERT INTO invoice (id_pelanggan,id_joborder,biaya_pib,biaya_sppb, biaya_joborder, biaya_total, no_pib, no_sppb) VALUES ('$_SESSION[id_pel]','$_SESSION[id_job]','$_SESSION[biaya_pib]','$_SESSION[biaya_sppb]','$_SESSION[biaya_joborder]','$_SESSION[total]','$_SESSION[no_pib]','$_SESSION[no_sppb]')") or die(mysqli_error($koneksi));
+          $insert = $koneksi->query("INSERT INTO invoice (id_pelanggan,id_joborder,biaya_joborder) VALUES ('$_SESSION[id_pel]','$_SESSION[id_job]','$_SESSION[biaya_joborder]')") or die(mysqli_error($koneksi));
           echo "
             <script>
             alert('Data Berhasil Ditambah');
@@ -168,11 +152,6 @@ if (!isset($_SESSION['login_karyawan'])) {
             $_SESSION['id_job'],
             $_SESSION['id_pel'],
             $_SESSION['biaya_joborder'],
-            $_SESSION['no_pib'],
-            $_SESSION['biaya_pib'],
-            $_SESSION['no_sppb'],
-            $_SESSION['biaya_sppb'],
-            $_SESSION['total']
           );
         }
       }
