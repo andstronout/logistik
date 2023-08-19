@@ -50,7 +50,7 @@ if (!isset($_SESSION['login_karyawan'])) {
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Data Job Order</h1>
+            <h1 class="h3 mb-0 text-gray-800">Data Delivery Order</h1>
             <a href="tambah_do.php" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Tambah Data</a>
           </div>
 
@@ -62,7 +62,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                   <thead>
                     <tr>
                       <th>No</th>
-                      <th>ID Job Order</th>
+                      <th>Nomor Invoice</th>
                       <th>Nomor DO</th>
                       <th>Nama Customer</th>
                       <th>Asal Logistik</th>
@@ -78,19 +78,19 @@ if (!isset($_SESSION['login_karyawan'])) {
                     ?>
                       <tr>
                         <td><?= $no++; ?></td>
-                        <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
+                        <td>INV-<?= str_pad($data['id_tagihan'], 4, "0", STR_PAD_LEFT); ?></td>
                         <td><?= $data['no_do']; ?></td>
                         <td><?= $data['nama_pelanggan']; ?></td>
                         <td><?= $data['from']; ?></td>
                         <td><?= $data['status_do']; ?></td>
                         <td>
-                          <a href="edit_do.php?id=<?= $data['no_do']; ?>" class="btn btn-info btn-icon-split btn-sm">
+                          <a href="edit_do.php?id=<?= $data['id_do']; ?>" class="btn btn-info btn-icon-split btn-sm">
                             <span class="icon text-white-50">
                               <i class="fas fa-info-circle"></i>
                             </span>
                             <span class="text">Ubah</span>
                           </a>
-                          <a href="hapus_do.php?id=<?= $data['no_do']; ?>" class="btn btn-danger btn-icon-split btn-sm" onclick="return confirm('Are you sure you want to delete?')">
+                          <a href="hapus_do.php?id=<?= $data['id_do']; ?>" class="btn btn-danger btn-icon-split btn-sm" onclick="return confirm('Are you sure you want to delete?')">
                             <span class="icon text-white-50">
                               <i class="fas fa-info-circle"></i>
                             </span>

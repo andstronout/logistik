@@ -42,6 +42,11 @@
 
   <!-- Nav Item - Charts -->
   <li class="nav-item">
+    <a class="nav-link" href="daftar_joborder.php">
+      <i class="fas fa-fw fa-table"></i>
+      <span>Data Job Order</span></a>
+  </li>
+  <li class="nav-item">
     <a class="nav-link" href="daftar_invoice.php">
       <i class="fas fa-fw fa-table"></i>
       <span>Data Invoice</span></a>

@@ -4,7 +4,7 @@ require '../../koneksi.php';
 $koneksi = koneksi();
 if (!isset($_SESSION['login_karyawan'])) {
   header('location:../../login.php');
-} else if ($_SESSION['level'] !== 'ops') {
+} else if ($_SESSION['level'] !== 'billing') {
   header('location:../404.php');
 }
 ?>
@@ -36,7 +36,7 @@ if (!isset($_SESSION['login_karyawan'])) {
 
   <!-- Page Wrapper -->
   <div id="wrapper">
-    <?php include('../../layout/siderbar_ops.php') ?>
+    <?php include('../../layout/siderbar_billing.php') ?>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -50,8 +50,7 @@ if (!isset($_SESSION['login_karyawan'])) {
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Surat Persetujuan Pengeluaran Barang</h1>
-            <a href="tambah_sppb.php" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Tambah Data</a>
+            <h1 class="h3 mb-0 text-gray-800">Data Job Order</h1>
           </div>
 
           <!-- Data Table -->
@@ -62,41 +61,48 @@ if (!isset($_SESSION['login_karyawan'])) {
                   <thead>
                     <tr>
                       <th>No</th>
-                      <th>Nomor SPPB</th>
-                      <th>Nomor PIB</th>
-                      <th>Nama Pelanggan</th>
-                      <th>Tanggal SPPB</th>
-                      <th>Biaya SPPB</th>
-                      <th>Aksi</th>
+                      <th>ID Job Order</th>
+                      <th>Nama Customer</th>
+                      <th>Nama Barang</th>
+                      <th>Tanggal Order</th>
+                      <th>Biaya Job Order</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
-                    $sql = $koneksi->query("SELECT * FROM sppb INNER JOIN pelanggan ON pelanggan.id_pelanggan=sppb.id_pelanggan");
+                    $sql = $koneksi->query("SELECT * FROM job_order INNER JOIN pelanggan ON pelanggan.id_pelanggan=job_order.id_pelanggan");
                     $no = 1;
                     while ($data = $sql->fetch_assoc()) {
                     ?>
                       <tr>
                         <td><?= $no++; ?></td>
-                        <td><?= $data['no_sppb']; ?></td>
-                        <td><?= $data['no_pib']; ?></td>
+                        <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
                         <td><?= $data['nama_pelanggan']; ?></td>
-                        <td><?= $data['tgl_sppb']; ?></td>
-                        <td><?= 'Rp.' . number_format($data['biaya_sppb']); ?></td>
-
+                        <td><?= $data['tgl_order']; ?></td>
+                        <td><?= $data['deskripsi']; ?></td>
+                        <td><?= 'Rp. ' . number_format($data['biaya_joborder']); ?></td>
                         <td>
-                          <a href="edit_sppb.php?id=<?= $data['no_sppb']; ?>" class="btn btn-info btn-icon-split btn-sm mb-2">
-                            <span class="icon text-white-50">
-                              <i class="fas fa-info-circle"></i>
+                          <?php
+                          if ($data['validasi'] == 'Pengajuan') {
+                            $color = '#F1C93B';
+                          } elseif ($data['validasi'] == 'Ditolak') {
+                            $color = '#FF6666';
+                          } elseif ($data['validasi'] == 'Selesai') {
+                            $color = '#1D5D9B';
+                          } elseif ($data['validasi'] == 'Paid') {
+                            $color = '#A076F9';
+                          } elseif ($data['validasi'] == 'Proses kirim') {
+                            $color = '#F2BED1';
+                          } else {
+                            $color = '#35A29F';
+                          }
+                          ?>
+                          <div class="rounded-pill text-center" style="background-color: <?= $color; ?>;">
+                            <span style="padding: 10px;" class="text-light">
+                              <?= $data['validasi']; ?>
                             </span>
-                            <span class="text">Ubah</span>
-                          </a>
-                          <a href="hapus_sppb.php?id=<?= $data['no_sppb']; ?>" class="btn btn-danger btn-icon-split btn-sm" onclick="return confirm('Are you sure you want to delete?')">
-                            <span class="icon text-white-50">
-                              <i class="fas fa-trash"></i>
-                            </span>
-                            <span class="text">Hapus</span>
-                          </a>
+                          </div>
                         </td>
                       <?php } ?>
                       </tr>
@@ -150,28 +156,7 @@ if (!isset($_SESSION['login_karyawan'])) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
   <script src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/b-print-2.3.6/datatables.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $('#myTable').DataTable({
-        dom: 'Bfrtip',
-        buttons: [{
-            extend: 'excelHtml5',
-            title: 'Data SPPB',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5]
-            }
-          },
-          {
-            extend: 'pdfHtml5',
-            title: 'Data SPPB',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6]
-            }
-          }
-        ]
-      });
-    });
-  </script>
+
 
 </body>
 

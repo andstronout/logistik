@@ -44,7 +44,7 @@
   <li class="nav-item">
     <a class="nav-link" href="daftar_karyawan.php">
       <i class="fas fa-fw fa-table"></i>
-      <span>Data Karyawan</span></a>
+      <span>Data User</span></a>
   </li>
 
   <!-- Nav Item - Tables -->

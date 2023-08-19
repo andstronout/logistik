@@ -78,17 +78,21 @@ if (!isset($_SESSION['login_karyawan'])) {
                     ?>
                       <tr>
                         <td><?= $no++; ?></td>
-                        <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
+                        <td>INV-<?= str_pad($data['id_tagihan'], 4, "0", STR_PAD_LEFT); ?></td>
                         <td><?= $data['no_do']; ?></td>
                         <td><?= $data['nama_pelanggan']; ?></td>
                         <td><?= $data['from']; ?></td>
                         <td><?= $data['status_do']; ?></td>
                         <td>
-                          <a href="approve_do.php?id=<?= $data['no_do']; ?>" class="btn btn-info btn-icon-split btn-sm">
+                          <a href="approve_do.php?id=<?= $data['id_do']; ?>" <?php if ($data['status_do'] == 'Pengajuan') { ?> class="btn btn-info btn-icon-split btn-sm" <?php } else { ?> class="btn btn-success btn-icon-split btn-sm" <?php } ?>>
                             <span class="icon text-white-50">
                               <i class="fas fa-info-circle"></i>
                             </span>
-                            <span class="text">Approve</span>
+                            <?php if ($data['status_do'] == 'Pengajuan') { ?>
+                              <span class="text">Approve</span>
+                            <?php } else { ?>
+                              <span class="text">Lihat Detail</span>
+                            <?php } ?>
                           </a>
                         </td>
                       <?php } ?>

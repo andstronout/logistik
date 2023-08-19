@@ -125,6 +125,8 @@ if (!isset($_SESSION['login_karyawan'])) {
         // benerin disini
         $cari = $koneksi->query("SELECT id_joborder FROM invoice WHERE id_joborder='$_SESSION[id_job]'");
         $dapet = $cari->fetch_assoc();
+        $cek = $koneksi->query("SELECT * FROM job_order WHERE id_joborder='$_SESSION[id_job]'");
+        $nemu = $cek->fetch_assoc();
 
         if ($dapet != null) {
           echo '
@@ -133,7 +135,7 @@ if (!isset($_SESSION['login_karyawan'])) {
           window.location.href= "tambah_invoice.php";
           </script>                    
           ';
-        } elseif ($dapet['biaya_joborder'] == null) {
+        } elseif ($nemu['validasi'] != 'Proses') {
           echo '
           <script>
           alert("Job Order belum di approve!");

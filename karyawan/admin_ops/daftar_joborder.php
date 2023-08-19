@@ -64,6 +64,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                       <th>ID Job Order</th>
                       <th>Nama Customer</th>
                       <th>Tanggal Order</th>
+                      <th>Nama Barang</th>
                       <th>Biaya Job Order</th>
                       <th>Status</th>
                       <th>Aksi</th>
@@ -80,6 +81,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                         <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
                         <td><?= $data['nama_pelanggan']; ?></td>
                         <td><?= $data['tgl_order']; ?></td>
+                        <td><?= $data['deskripsi']; ?></td>
                         <td><?= 'Rp. ' . number_format($data['biaya_joborder']); ?></td>
                         <td>
                           <?php
@@ -108,7 +110,11 @@ if (!isset($_SESSION['login_karyawan'])) {
                             <span class="icon text-white-50">
                               <i class="fas fa-info-circle"></i>
                             </span>
-                            <span class="text">Aprove</span>
+                            <?php if ($data['validasi'] == 'Pengajuan') { ?>
+                              <span class="text">Aprove</span>
+                            <?php } else { ?>
+                              <span class="text">Lihat detail</span>
+                            <?php } ?>
                           </a>
                         </td>
                       <?php } ?>

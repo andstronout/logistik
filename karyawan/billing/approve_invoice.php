@@ -67,33 +67,17 @@ if (!isset($_SESSION['login_karyawan'])) {
                   <input type="text" class="form-control" id="exampleInputno1" aria-describedby="noHelp" value="<?php echo 'SLI-' . str_pad($hasil['id_joborder'], 4, '0', STR_PAD_LEFT); ?>" readonly>
                 </div>
                 <div class="mb-3">
+                  <label for="exampleInputpelanggan1" class="form-label">Nomor Pembayaran</label>
+                  <input type="text" class="form-control" id="exampleInputpelanggan1" aria-describedby="pelangganHelp" value="<?= $hasil['bukti_bayar']; ?>" readonly>
+                </div>
+                <div class="mb-3">
                   <label for="exampleInputpelanggan1" class="form-label">Nama Pelanggan</label>
                   <input type="text" class="form-control" id="exampleInputpelanggan1" aria-describedby="pelangganHelp" value="<?= $hasil['nama_pelanggan']; ?>" readonly>
                 </div>
-                <div class="mb-3 ">
-                  <label for="exampleInputnopib1" class="form-label">Nomor PIB</label>
-                  <input type="text" class="form-control" id="exampleInputnopib1" aria-describedby="nopibHelp" value="<?= $hasil['no_pib']; ?>" readonly>
-                </div>
-                <div class="mb-3">
-                  <label for="exampleInputbiaya1" class="form-label">Biaya PIB</label>
-                  <input type="text" class="form-control" id="exampleInputbiaya1" value="<?= 'Rp. ' . number_format($hasil['biaya_pib']); ?>" readonly>
-                </div>
-                <div class="mb-3 ">
-                  <label for="exampleInputnopib1" class="form-label">Nomor SPPB</label>
-                  <input type="text" class="form-control" id="exampleInputnopib1" aria-describedby="nopibHelp" value="<?= $hasil['no_sppb']; ?>" readonly>
-                </div>
-                <div class="mb-3">
-                  <label for="exampleInputbiaya1" class="form-label">Biaya SPPB</label>
-                  <input type="text" class="form-control" id="exampleInputbiaya1" value="<?= 'Rp. ' . number_format($hasil['biaya_sppb']); ?>" readonly>
-                </div>
+                <hr>
                 <div class="mb-3">
                   <label for="exampleInputbiaya1" class="form-label">Biaya Job Order</label>
                   <input type="text" class="form-control" id="exampleInputbiaya1" value="<?= 'Rp. ' . number_format($hasil['biaya_joborder']); ?>" readonly>
-                </div>
-                <hr>
-                <div class="mb-3">
-                  <label for="exampleInputbiaya1" class="form-label">Total Biaya</label>
-                  <input type="text" class="form-control" id="exampleInputbiaya1" value="<?= 'Rp.  ' . number_format($hasil['biaya_total']) . ',-'; ?>" readonly>
                 </div>
                 <?php
                 if ($hasil['validasi'] == 'Selesai') { ?>
@@ -119,15 +103,23 @@ if (!isset($_SESSION['login_karyawan'])) {
 
       <?php
       if (isset($_POST['simpan'])) {
-        echo 'ok';
-        $update = "UPDATE job_order SET validasi='Paid' WHERE id_joborder ='$hasil[id_joborder]' ";
-        if ($koneksi->query($update) or die(mysqli_error($koneksi)) == true) {
+        if ($hasil['bukti_bayar'] == null) {
           echo "
+          <script>
+          alert('Pelanggan belum melakukan pembayaran!');
+          window.location.href='daftar_invoice.php';
+          </script>
+          ";
+        } else {
+          $update = "UPDATE job_order SET validasi='Paid' WHERE id_joborder ='$hasil[id_joborder]' ";
+          if ($koneksi->query($update) or die(mysqli_error($koneksi)) == true) {
+            echo "
           <script>
           alert('Data Telah Disetujui!');
           window.location.href='daftar_invoice.php';
           </script>
           ";
+          }
         }
       }
       ?>

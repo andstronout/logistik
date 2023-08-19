@@ -5,7 +5,7 @@ $koneksi = koneksi();
 if (!isset($_SESSION['login_karyawan'])) {
   header('location:../../login.php');
 } else if ($_SESSION['level'] !== 'ekspedisi') {
-  header('location:../404.php');
+  header('location:../../login.php');
 }
 ?>
 <!DOCTYPE html>
@@ -50,36 +50,56 @@ if (!isset($_SESSION['login_karyawan'])) {
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Data Job Order</h1>
+            <h1 class="h3 mb-0 text-gray-800">Data Invoice</h1>
+
           </div>
 
           <!-- Data Table -->
           <div class="card shadow mb-4">
             <div class="card-body">
-              <div class="table-responsive ">
-                <table class="table table-bordered " id="myTable" width="100%" cellspacing="0">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="myTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th>No</th>
+                      <th>No Invoice</th>
                       <th>ID Job Order</th>
-                      <th>Nama Customer</th>
-                      <th>Tanggal Order</th>
-                      <th>Biaya Job Order</th>
+                      <th>Total Biaya</th>
+                      <th>Nomor Bukti Bayar</th>
+                      <th>Tanggal Bayar</th>
                       <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
-                    $sql = $koneksi->query("SELECT * FROM job_order INNER JOIN pelanggan ON pelanggan.id_pelanggan=job_order.id_pelanggan");
+                    $sql = $koneksi->query("SELECT * FROM invoice INNER JOIN job_order ON job_order.id_joborder=invoice.id_joborder WHERE  validasi='Proses' OR validasi='Selesai' OR validasi='Paid'") or die(mysqli_error($koneksi));
+                    // var_dump($data = $sql->fetch_assoc());
                     $no = 1;
                     while ($data = $sql->fetch_assoc()) {
                     ?>
                       <tr>
                         <td><?= $no++; ?></td>
+                        <td>INV-<?= str_pad($data['id_tagihan'], 4, "0", STR_PAD_LEFT); ?></td>
                         <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
-                        <td><?= $data['nama_pelanggan']; ?></td>
-                        <td><?= $data['tgl_order']; ?></td>
-                        <td><?= 'Rp. ' . number_format($data['biaya_joborder']); ?></td>
+                        <td>Rp. <?= number_format($data['biaya_joborder']); ?> ,-</td>
+                        <td>
+                          <?php
+                          if ($data['bukti_bayar'] == null) {
+                            echo 'Belum ada pembayaran';
+                          } else {
+                            echo $data['bukti_bayar'];
+                          }
+                          ?>
+                        </td>
+                        <td>
+                          <?php
+                          if ($data['bukti_bayar'] == null) {
+                            echo 'No Date';
+                          } else {
+                            echo $data['tgl_bayar'];
+                          }
+                          ?>
+                        </td>
                         <td>
                           <?php
                           if ($data['validasi'] == 'Pengajuan') {
@@ -90,8 +110,6 @@ if (!isset($_SESSION['login_karyawan'])) {
                             $color = '#1D5D9B';
                           } elseif ($data['validasi'] == 'Paid') {
                             $color = '#A076F9';
-                          } elseif ($data['validasi'] == 'Proses kirim') {
-                            $color = '#F2BED1';
                           } else {
                             $color = '#35A29F';
                           }
@@ -138,6 +156,7 @@ if (!isset($_SESSION['login_karyawan'])) {
     <i class="fas fa-angle-up"></i>
   </a>
 
+
   <!-- Bootstrap core JavaScript-->
   <script src="../../sbadmin/vendor/jquery/jquery.min.js"></script>
   <script src="../../sbadmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -154,28 +173,7 @@ if (!isset($_SESSION['login_karyawan'])) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
   <script src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/b-print-2.3.6/datatables.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $('#myTable').DataTable({
-        dom: 'Bfrtip',
-        buttons: [{
-            extend: 'excelHtml5',
-            title: 'Data Job Order',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5]
-            }
-          },
-          {
-            extend: 'pdfHtml5',
-            title: 'Data Job Order',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5]
-            }
-          }
-        ]
-      });
-    });
-  </script>
+
 
 </body>
 

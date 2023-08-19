@@ -81,7 +81,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputtgl1" class="form-label"> Biaya Job Order</label>
-                  <input type="number" class="form-control" id="exampleInputtgl1" aria-describedby="tglHelp" name="biaya" value="<?= ($hasil['biaya_joborder']); ?>" required>
+                  <input type="number" min="0" class="form-control" id="exampleInputtgl1" aria-describedby="tglHelp" name="biaya" value="<?= ($hasil['biaya_joborder']); ?>" required>
                 </div>
 
 

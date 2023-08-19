@@ -54,7 +54,7 @@ if (!isset($_SESSION['login_karyawan'])) {
 
           <!-- Cari Data PIB -->
           <?php
-          $sql = $koneksi->query("SELECT * FROM do INNER JOIN pelanggan ON do.id_pelanggan=pelanggan.id_pelanggan WHERE no_do='$id'") or die(mysqli_error($koneksi));
+          $sql = $koneksi->query("SELECT * FROM do INNER JOIN pelanggan ON do.id_pelanggan=pelanggan.id_pelanggan WHERE id_do='$id'") or die(mysqli_error($koneksi));
           $hasil = $sql->fetch_assoc();
           // var_dump($hasil);
           ?>
@@ -67,11 +67,11 @@ if (!isset($_SESSION['login_karyawan'])) {
               <form method="post">
                 <div class="mb-3">
                   <label for="exampleInputno1" class="form-label">Nomor Delivery Order</label>
-                  <input type="text" class="form-control" id="exampleInputno1" aria-describedby="noHelp" name="no_do" value="<?= $hasil['no_do']; ?>" readonly>
+                  <input type="text" class="form-control" id="exampleInputno1" aria-describedby="noHelp" name="no_do" value="<?= $hasil['no_do']; ?>" required>
                 </div>
                 <div class="mb-3">
-                  <label for="exampleInputno1" class="form-label">Nomor Job Order</label>
-                  <input type="text" class="form-control" id="exampleInputno1" aria-describedby="noHelp" name="id_joborder" value="<?php echo 'SLI-' . str_pad($hasil['id_joborder'], 4, '0', STR_PAD_LEFT); ?>" readonly>
+                  <label for="exampleInputno1" class="form-label">Nomor Invoice</label>
+                  <input type="text" class="form-control" id="exampleInputno1" aria-describedby="noHelp" name="id_tagihan" value="<?php echo 'INV-' . str_pad($hasil['id_tagihan'], 4, '0', STR_PAD_LEFT); ?>" readonly>
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputpelanggan1" class="form-label">Nama Pelanggan</label>
@@ -96,7 +96,7 @@ if (!isset($_SESSION['login_karyawan'])) {
 
     <?php
     if (isset($_POST['simpan'])) {
-      $update = $koneksi->query("UPDATE do SET no_do='$_POST[no_do]',`from`='$_POST[from]' WHERE no_do='$id'") or die(mysqli_error($koneksi));
+      $update = $koneksi->query("UPDATE do SET no_do='$_POST[no_do]',`from`='$_POST[from]' WHERE id_do='$id'") or die(mysqli_error($koneksi));
       echo "
         <script>
         alert('Data Berhasil Diubah');

@@ -57,8 +57,8 @@ if (!isset($_SESSION['login_karyawan'])) {
             <div class="card-body">
               <form method="post">
                 <div class="mb-3">
-                  <label for="exampleInputno1" class="form-label">Nomor Job Order</label>
-                  <input type="text" class="form-control" id="exampleInputno1" aria-describedby="noHelp" name="id_job" placeholder="Masukan nomor Job Order">
+                  <label for="exampleInputno1" class="form-label">Nomor Invoice</label>
+                  <input type="text" class="form-control" id="exampleInputno1" aria-describedby="noHelp" name="id_inv" placeholder="Masukan nomor Invoice">
                 </div>
                 <button type="submit" class="btn btn-success col-2 " name="cek">Check</button>
                 <hr>
@@ -66,21 +66,22 @@ if (!isset($_SESSION['login_karyawan'])) {
                 <!-- Cek Job Order -->
                 <?php
                 if (isset($_POST['cek'])) {
-                  $ambil = $_POST['id_job'];
+                  $ambil = $_POST['id_inv'];
                   $cek = explode('-', $ambil);
                   $cekid = $cek[1];
-                  $sq = $koneksi->query("SELECT * FROM job_order INNER JOIN pelanggan ON pelanggan.id_pelanggan=job_order.id_pelanggan WHERE id_joborder='$cekid'");
+                  $sq = $koneksi->query("SELECT * FROM invoice INNER JOIN job_order ON invoice.id_joborder=job_order.id_joborder INNER JOIN pelanggan ON pelanggan.id_pelanggan=invoice.id_pelanggan WHERE id_tagihan='$cekid'");
                   $sql = $sq->fetch_assoc();
+                  // var_dump($sql);
                   // ini data dapet dari cek
-                  $_SESSION['id_job'] = $sql['id_joborder'];
+                  $_SESSION['id_inv'] = $sql['id_tagihan'];
                   $_SESSION['id_pel'] = $sql['id_pelanggan'];
                   if ($sql != null) { ?>
                     <!-- End Cek Job Order -->
 
                     <div class="after cek">
                       <div class="mb-3">
-                        <label for="exampleInputno1" class="form-label">Nomor Job Order</label>
-                        <input type="text" class="form-control" id="exampleInputno1" aria-describedby="noHelp" name="id_joborder" value="<?= $_POST['id_job'] ?>" readonly>
+                        <label for="exampleInputno1" class="form-label">Nomor Invoice</label>
+                        <input type="text" class="form-control" id="exampleInputno1" aria-describedby="noHelp" name="id_tagihan" value="<?= $_POST['id_inv'] ?>" readonly>
                       </div>
                       <div class="mb-3">
                         <label for="exampleInputpelanggan1" class="form-label">Nama Pelanggan</label>
@@ -95,12 +96,13 @@ if (!isset($_SESSION['login_karyawan'])) {
                         <input type="text" class="form-control" id="exampleInputfrom1" aria-describedby="fromHelp" name="from" placeholder="Masukan Asal Logistik">
                       </div>
                       <input type="hidden" name="status_do">
+                      <input type="hidden" name="id_joborder" value="<?= $sql['id_joborder']; ?>">
                       <button type="submit" class="btn btn-success col-2 " name="simpan" onclick="return confirm('Apakah Sudah benar?')">Simpan</button>
                     </div>
                 <?php } else {
                     echo '
                     <script>
-                    alert("Job Order tidak boleh kosong!");
+                    alert("Invoice tidak boleh kosong!");
                     window.location.href= "tambah_do.php";
                     </script>                    
                     ';
@@ -120,32 +122,38 @@ if (!isset($_SESSION['login_karyawan'])) {
 
       <?php
       if (isset($_POST['simpan'])) {
-        $idjob = $_POST['id_joborder'];
+        $idinv = $_POST['id_tagihan'];
         $idpel = $_POST['id_pelanggan'];
-        $ck = explode('-', $idpel);
-        $idpelanggan = $ck[1];
+        $idjob = $_POST['id_joborder'];
+        $ck = explode('-', $idinv);
+        $idinv = $ck[1];
         // var_dump($idjob, $idpelanggan);
         $tanggalpib = date('Y-m-d');
 
-        $cari = $koneksi->query("SELECT id_joborder FROM do WHERE id_joborder='$_SESSION[id_job]'");
+        $cari = $koneksi->query("SELECT * FROM do WHERE do.id_tagihan='$idinv'") or die(mysqli_error($koneksi));
         $dapet = $cari->fetch_assoc();
+        // var_dump($dapet);
 
         if ($dapet != null) {
           echo '
           <script>
-          alert("Job Order sudah dipakai!");
+          alert("Nomor Invoice sudah dipakai!");
           window.location.href= "tambah_do.php";
           </script>                    
           ';
         } else {
-          $insert = $koneksi->query("INSERT INTO do (no_do,`from`,id_pelanggan,id_joborder,status_do) VALUES ('$_POST[no_do]','$_POST[from]','$_SESSION[id_pel]','$_SESSION[id_job]','Pengajuan')") or die(mysqli_error($koneksi));
+
+          $insert = $koneksi->query("INSERT INTO do (no_do,`from`,id_pelanggan,id_tagihan,status_do) VALUES ('$_POST[no_do]','$_POST[from]','$_SESSION[id_pel]','$idinv','Pengajuan')") or die(mysqli_error($koneksi));
+          if ($insert == true) {
+            $update = $koneksi->query("UPDATE job_order SET validasi='Selesai' WHERE id_joborder='$idjob'") or die(mysqli_error($koneksi));
+          }
           echo "
             <script>
             alert('Data Berhasil Ditambah');
             document.location.href = 'daftar_do.php';
             </script>
             ";
-          session_unset($_SESSION['id_job'], $_SESSION['id_pel']);
+          session_unset($_SESSION['id_inv'], $_SESSION['id_pel']);
         }
       }
       ?>

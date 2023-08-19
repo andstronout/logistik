@@ -58,11 +58,11 @@ $koneksi = koneksi();
                     <tr>
                       <th>No</th>
                       <th>ID Job Order</th>
+                      <th>Deskripsi Barang</th>
                       <th>Packing List</th>
                       <th>Faktur</th>
                       <th>Tanggal Order</th>
                       <th>Status</th>
-                      <th>Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -75,6 +75,7 @@ $koneksi = koneksi();
                       <tr>
                         <td><?= $no++; ?></td>
                         <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
+                        <td><?= $data['deskripsi']; ?></td>
                         <td><?= $data['no_packing_list']; ?></td>
                         <td><?= $data['no_faktur']; ?></td>
                         <td><?= $data['tgl_order']; ?></td>
@@ -99,14 +100,6 @@ $koneksi = koneksi();
                               <?= $data['validasi']; ?>
                             </span>
                           </div>
-                        </td>
-                        <td>
-                          <a href="selesai_joborder.php?id=<?= $data['id_joborder']; ?>" class="btn btn-info btn-icon-split btn-sm">
-                            <span class="icon text-white-50">
-                              <i class="fas fa-info-circle"></i>
-                            </span>
-                            <span class="text">Diterima</span>
-                          </a>
                         </td>
                       <?php } ?>
                       </tr>

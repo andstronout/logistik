@@ -103,7 +103,7 @@ $koneksi = koneksi();
                               <span class="text">Kirim Bukti Bayar</span>
                             </a>
                           <?php } else { ?>
-                            <a href="upload_buktibayar.php?id=<?= $data['id_tagihan']; ?>" class="btn btn-success btn-icon-split btn-sm">
+                            <a href="upload_buktibayar.php?id=<?= $data['id_tagihan']; ?>" class="btn btn-warning btn-icon-split btn-sm">
                               <span class="icon text-white-50">
                                 <i class="fas fa-info-circle"></i>
                               </span>

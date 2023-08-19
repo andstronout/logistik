@@ -47,7 +47,7 @@ $koneksi = koneksi();
           <header class="masthead bg-light text-dark text-center">
             <div class="container d-flex align-items-center flex-column">
               <!-- Masthead Avatar Image-->
-              <img class="masthead-avatar mb-5" src="../../img/logo_img.png" alt="..." width="700px" />
+              <img class="masthead-avatar mb-5" src="../img/logo_img.png" alt="..." width="700px" />
               <!-- Masthead Heading-->
               <h1 class="masthead-heading text-uppercase mb-0">Best Customs and Broker Protection</h1>
               <!-- Icon Divider-->

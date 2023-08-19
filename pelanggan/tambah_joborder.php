@@ -54,6 +54,18 @@ $hasil = $sql->fetch_assoc();
             <div class="card-body">
               <form method="post">
                 <div class="mb-3">
+                  <?php
+                  $cari = $koneksi->query("SELECT nama_pelanggan FROM pelanggan WHERE id_pelanggan='$id_pelanggan'");
+                  $dapet = $cari->fetch_assoc();
+                  ?>
+                  <label for="exampleInputdeskripsi" class="form-label">Nama Pelanggan</label>
+                  <input type="text" class="form-control" id="exampleInputdeskripsi" aria-describedby="deksripsiHelp" value="<?= $dapet['nama_pelanggan']; ?>" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputdeskripsi" class="form-label">Deskripsi Barang</label>
+                  <input type="text" class="form-control" id="exampleInputdeskripsi" aria-describedby="deksripsiHelp" name="deskripsi" placeholder="Masukan nomor packing list" required>
+                </div>
+                <div class="mb-3">
                   <label for="exampleInputpacking_list1" class="form-label">Packing List</label>
                   <input type="text" class="form-control" id="exampleInputpacking_list1" aria-describedby="packing_listHelp" name="no_packing_list" placeholder="Masukan nomor packing list" required>
                 </div>
@@ -75,6 +87,7 @@ $hasil = $sql->fetch_assoc();
         if (isset($_POST['simpan'])) {
           $nopacking = $_POST['no_packing_list'];
           $faktur = $_POST['no_faktur'];
+          $deskripsi = $_POST['deskripsi'];
           // var_dump($nobl, $nopacking, $faktur);
 
           if ($hasil['no_packing_list'] == $nopacking) {
@@ -90,7 +103,7 @@ $hasil = $sql->fetch_assoc();
               </script>            
             ';
           } else {
-            $insert = $koneksi->query("INSERT INTO job_order (id_pelanggan, no_packing_list, no_faktur,validasi, tgl_order) VALUES ('$id_pelanggan','$nopacking','$faktur','Pengajuan','$tanggal')") or die(mysqli_error($koneksi));
+            $insert = $koneksi->query("INSERT INTO job_order (id_pelanggan, deskripsi, no_packing_list, no_faktur,validasi, tgl_order) VALUES ('$id_pelanggan','$deskripsi','$nopacking','$faktur','Pengajuan','$tanggal')") or die(mysqli_error($koneksi));
             echo '
               <script>
               alert("Pengajuan Job Order Berhasil!");

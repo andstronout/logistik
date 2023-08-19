@@ -54,14 +54,14 @@ if (!isset($_SESSION['login_karyawan'])) {
 
           <!-- Cari Data PIB -->
           <?php
-          $sql = $koneksi->query("SELECT * FROM do INNER JOIN pelanggan ON do.id_pelanggan=pelanggan.id_pelanggan WHERE no_do='$id'") or die(mysqli_error($koneksi));
+          $sql = $koneksi->query("SELECT * FROM do INNER JOIN pelanggan ON do.id_pelanggan=pelanggan.id_pelanggan WHERE id_do='$id'") or die(mysqli_error($koneksi));
           $hasil = $sql->fetch_assoc();
           // var_dump($hasil);
           ?>
           <!-- End Cari Data PIB -->
 
           <!-- Page Heading -->
-          <h1 class="h4 mb-4 text-gray-800">Ubah Data PIB</h1>
+          <h1 class="h4 mb-4 text-gray-800">Approve Delivery Order</h1>
           <div class="card shadow mb-4">
             <div class="card-body">
               <form method="post">
@@ -70,8 +70,8 @@ if (!isset($_SESSION['login_karyawan'])) {
                   <input type="text" class="form-control" id="exampleInputno1" aria-describedby="noHelp" name="no_do" value="<?= $hasil['no_do']; ?>" readonly>
                 </div>
                 <div class="mb-3">
-                  <label for="exampleInputno1" class="form-label">Nomor Job Order</label>
-                  <input type="text" class="form-control" id="exampleInputno1" aria-describedby="noHelp" name="id_joborder" value="<?php echo 'SLI-' . str_pad($hasil['id_joborder'], 4, '0', STR_PAD_LEFT); ?>" readonly>
+                  <label for="exampleInputno1" class="form-label">Nomor Invoice</label>
+                  <input type="text" class="form-control" id="exampleInputno1" aria-describedby="noHelp" name="id_tagihan" value="<?php echo 'INV-' . str_pad($hasil['id_tagihan'], 4, '0', STR_PAD_LEFT); ?>" readonly>
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputpelanggan1" class="form-label">Nama Pelanggan</label>
@@ -81,7 +81,11 @@ if (!isset($_SESSION['login_karyawan'])) {
                   <label for="exampleInputpengajuan1" class="form-label">Asal Logistik</label>
                   <input type="text" class="form-control" id="exampleInputpengajuan1" aria-describedby="pengajuanHelp" name="from" value="<?= $hasil['from']; ?>" readonly>
                 </div>
-                <button type="submit" class="btn btn-success col-2 " name="simpan">Approve</button>
+                <?php if ($hasil['status_do'] == 'Approve') { ?>
+                  <a href="daftar_do.php" class="btn btn-outline-info">Kembali ke Daftar</a>
+                <?php } else { ?>
+                  <button type="submit" class="btn btn-success col-2 " name="simpan">Approve</button>
+                <?php } ?>
               </form>
             </div>
           </div>
@@ -96,12 +100,12 @@ if (!isset($_SESSION['login_karyawan'])) {
 
     <?php
     if (isset($_POST['simpan'])) {
-      $ambil = $_POST['id_joborder'];
-      $cek = explode('-', $ambil);
-      $cekid = $cek[1];
+      // $ambil = $_POST['id_joborder'];
+      // $cek = explode('-', $ambil);
+      // $cekid = $cek[1];
       // var_dump($_POST['id_joborder']);
-      $update = $koneksi->query("UPDATE do SET status_do='Disetujui' WHERE no_do='$id'") or die(mysqli_error($koneksi));
-      $ganti = $koneksi->query("UPDATE job_order SET `validasi`= 'Proses kirim' WHERE id_joborder='$cekid'") or die(mysqli_error($koneksi));
+      $update = $koneksi->query("UPDATE do SET status_do='Approve' WHERE id_do='$id'") or die(mysqli_error($koneksi));
+      // $ganti = $koneksi->query("UPDATE job_order SET `validasi`= 'Proses kirim' WHERE id_joborder='$cekid'") or die(mysqli_error($koneksi));
       echo "
           <script>
           alert('Data Telah Disetujui');
