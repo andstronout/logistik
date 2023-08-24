@@ -56,6 +56,31 @@ if (!isset($_SESSION['login_karyawan'])) {
           <!-- Data Table -->
           <div class="card shadow mb-4">
             <div class="card-body">
+              <form class="row g-3" action="" method="post">
+                <div class="col-auto">
+                  <label for="">Dari Tanggal</label>
+                  <input type="date" class="form-control" name="t_awal" required>
+                </div>
+                <div class="col-auto">
+                  <label for="">Ke Tanggal</label>
+                  <input type="date" class="form-control" name="t_akhir" required>
+                </div>
+                <div class="col-auto">
+                  <button type="submit" class="btn btn-secondary" name="simpan">Simpan</button>
+                  <a href="daftar_joborder.php" class="btn btn-outline-secondary">Reset</a>
+                </div>
+              </form>
+              <?php
+              if (isset($_POST['simpan'])) {
+                // var_dump($_POST["t_awal"], $_POST["t_akhir"]);
+                $_SESSION["awal"] = $_POST["t_awal"];
+                $_SESSION["akhir"] = $_POST["t_akhir"];
+                $query = "SELECT * FROM job_order INNER JOIN pelanggan ON pelanggan.id_pelanggan=job_order.id_pelanggan WHERE tgl_order BETWEEN '$_SESSION[awal]' AND '$_SESSION[akhir]' ";
+              } else {
+                $query = "SELECT * FROM job_order INNER JOIN pelanggan ON pelanggan.id_pelanggan=job_order.id_pelanggan INNER JOIN invoice ON invoice.id_joborder=job_order.id_joborder";
+              }
+              ?>
+              <br>
               <div class="table-responsive ">
                 <table class="table table-bordered " id="myTable" width="100%" cellspacing="0">
                   <thead>
@@ -70,7 +95,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                   </thead>
                   <tbody>
                     <?php
-                    $sql = $koneksi->query("SELECT * FROM job_order INNER JOIN pelanggan ON pelanggan.id_pelanggan=job_order.id_pelanggan INNER JOIN invoice ON invoice.id_joborder=job_order.id_joborder");
+                    $sql = $koneksi->query($query);
                     $no = 1;
                     while ($data = $sql->fetch_assoc()) {
                     ?>
@@ -79,7 +104,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                         <td>SLI-<?= str_pad($data['id_joborder'], 4, "0", STR_PAD_LEFT); ?></td>
                         <td><?= $data['nama_pelanggan']; ?></td>
                         <td><?= $data['tgl_order']; ?></td>
-                        <td><?= 'Rp. ' . number_format($data['biaya_total']); ?></td>
+                        <td><?= 'Rp. ' . number_format($data['biaya_joborder']); ?></td>
                         <td>
                           <?php
                           if ($data['validasi'] == 'Pengajuan') {

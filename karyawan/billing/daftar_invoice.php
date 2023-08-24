@@ -132,7 +132,7 @@ if (!isset($_SESSION['login_karyawan'])) {
                             </a>
                           <?php
                           } else { ?>
-                            <a href="approve_invoice.php?id=<?= $data['id_tagihan']; ?>" class="btn btn-info btn-icon-split btn-sm">
+                            <a href="approve_invoice.php?id=<?= $data['id_tagihan']; ?>" class="btn btn-success btn-icon-split btn-sm">
                               <span class="icon text-white-50">
                                 <i class="fas fa-info-circle"></i>
                               </span>
@@ -201,14 +201,14 @@ if (!isset($_SESSION['login_karyawan'])) {
             extend: 'excelHtml5',
             title: 'Data Invoice',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5]
+              columns: [0, 1, 2, 3, 4, 5, 6]
             }
           },
           {
             extend: 'pdfHtml5',
             title: 'Data Invoice',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5]
+              columns: [0, 1, 2, 3, 4, 5, 6]
             }
           }
         ]

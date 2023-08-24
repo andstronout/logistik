@@ -177,14 +177,14 @@ if (!isset($_SESSION['login_karyawan'])) {
             extend: 'excelHtml5',
             title: 'Data Job Order',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5]
+              columns: [0, 1, 2, 3, 4, 5, 6]
             }
           },
           {
             extend: 'pdfHtml5',
             title: 'Data Job Order',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5]
+              columns: [0, 1, 2, 3, 4, 5, 6]
             }
           }
         ]
